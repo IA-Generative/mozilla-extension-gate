@@ -44,46 +44,19 @@ spec:
         env:
         # GitHub Token
         {{- with .Values.secrets.github.token }}
-        {{- if eq .type "value" }}
         - name: GITHUB_TOKEN
-          value: {{ .value | quote }}
-        {{- else if eq .type "secretRef" }}
-        - name: GITHUB_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: {{ .secretRef.name }}
-              key: {{ .secretRef.key }}
+          {{- . | toYaml | nindent 10 }}
         {{- end }}
-        {{- end }}
-
         # S3 Access Key ID
         {{- with .Values.secrets.s3.accessKeyId }}
-        {{- if eq .type "value" }}
         - name: S3_ACCESS_KEY_ID
-          value: {{ .value | quote }}
-        {{- else if eq .type "secretRef" }}
-        - name: S3_ACCESS_KEY_ID
-          valueFrom:
-            secretKeyRef:
-              name: {{ .secretRef.name }}
-              key: {{ .secretRef.key }}
+          {{- . | toYaml | nindent 10 }}
         {{- end }}
-        {{- end }}
-
         # S3 Secret Access Key
         {{- with .Values.secrets.s3.secretAccessKey }}
-        {{- if eq .type "value" }}
         - name: S3_SECRET_ACCESS_KEY
-          value: {{ .value | quote }}
-        {{- else if eq .type "secretRef" }}
-        - name: S3_SECRET_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: {{ .secretRef.name }}
-              key: {{ .secretRef.key }}
+          {{- . | toYaml | nindent 10 }}
         {{- end }}
-        {{- end }}
-
         # Additional custom environment variables
         {{- with .Values.env }}
         {{- toYaml . | nindent 8 }}

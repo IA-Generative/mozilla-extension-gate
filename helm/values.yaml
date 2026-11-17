@@ -88,8 +88,6 @@ config:
 
 # Secrets configuration
 # Each secret can be provided as:
-# - type: "value" with plain text value (development only!)
-# - type: "secretRef" with reference to existing K8s Secret (recommended for production)
 #
 # EXAMPLES:
 #
@@ -97,14 +95,11 @@ config:
 # secrets:
 #   github:
 #     token:
-#       type: "value"
 #       value: "ghp_xxxxxxxxxxxx"
 #   s3:
 #     accessKeyId:
-#       type: "value"
 #       value: "rustfsadmin"
 #     secretAccessKey:
-#       type: "value"
 #       value: "rustfsadmin123"
 #
 # Option 2: Reference existing K8s Secrets (recommended for production)
@@ -117,33 +112,27 @@ config:
 # secrets:
 #   github:
 #     token:
-#       type: "secretRef"
-#       secretRef:
+#       secretKeyRef:
 #         name: github-credentials
 #         key: token
 #   s3:
 #     accessKeyId:
-#       type: "secretRef"
-#       secretRef:
+#       secretKeyRef:
 #         name: s3-credentials
 #         key: access-key-id
 #     secretAccessKey:
-#       type: "secretRef"
-#       secretRef:
+#       secretKeyRef:
 #         name: s3-credentials
 #         key: secret-access-key
 #
 secrets:
   github:
     token:
-      type: "value"
       value: ""
   s3:
     accessKeyId:
-      type: "value"
       value: ""
     secretAccessKey:
-      type: "value"
       value: ""
 
 # Environment variables for the pod
