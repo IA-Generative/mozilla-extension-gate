@@ -8,36 +8,36 @@ import (
 )
 
 type Config struct {
-	Server          ServerConfig `yaml:"server"`
-	Github          GithubConfig `yaml:"github"`
-	S3              S3Config     `yaml:"s3"`
-	ArtifactsPrefix string       `yaml:"artifacts_prefix"`
-	ManifestsPrefix string       `yaml:"manifests_prefix"`
+	Server          ServerConfig
+	Github          GithubConfig
+	S3              S3Config
+	ArtifactsPrefix string
+	ManifestsPrefix string
 }
 
 type GithubConfig struct {
-	Repository   string        `yaml:"github_repository"`
-	Token        string        `yaml:"github_token"`
-	SyncInterval time.Duration `yaml:"github_sync_interval"`
+	Repository   string
+	Token        string
+	SyncInterval time.Duration
 }
 
 type S3Config struct {
-	AccessKeyID     string `yaml:"s3_access_key_id"`
-	SecretAccessKey string `yaml:"s3_secret_access_key"`
-	Bucket          string `yaml:"s3_bucket"`
-	Region          string `yaml:"s3_region"`
-	Endpoint        string `yaml:"s3_endpoint"`
+	AccessKeyID     string
+	SecretAccessKey string
+	Bucket          string
+	Region          string
+	Endpoint        string
 }
 
 type ServerConfig struct {
-	Env                  string `yaml:"env"`
-	Port                 string `yaml:"port"`
-	PublicURL            string `yaml:"public_url"`
-	BasePath             string `yaml:"base_path"`
-	Version              string `yaml:"version"`
-	InstanceID           string `yaml:"instance_id"`
-	ArtifactBaseUrl      string `yaml:"artifact_base_url"`
-	ProxyArtifactEnabled bool   `yaml:"proxy_artifact_enabled"`
+	Env                  string
+	Port                 string
+	PublicURL            string
+	BasePath             string
+	Version              string
+	InstanceID           string
+	ArtifactBaseUrl      string
+	ProxyArtifactEnabled bool
 }
 
 func Load() (*Config, error) {

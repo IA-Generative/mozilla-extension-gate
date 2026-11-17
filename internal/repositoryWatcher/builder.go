@@ -29,7 +29,7 @@ type UpdateManifest struct {
 	Addons map[string]struct {
 		Updates []UpdateElement `json:"updates"`
 	} `json:"addons"`
-	Etag *string
+	Etag *string `json:"-"`
 }
 
 var currentManifest UpdateManifest

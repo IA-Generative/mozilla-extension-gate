@@ -13,7 +13,7 @@ services:
       S3_BUCKET: test
       S3_REGION: us-east-1
       S3_ENDPOINT: http://rustfs:9000
-      GITHUB_TOKEN: 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
+      GITHUB_TOKEN: ""
       GITHUB_REPOSITORY: ArnaudTA/gubexplorer
       ARTIFACT_BASE_URL: http://localhost:9001/test/artifacts/
       PROXY_ARTIFACT_ENABLED: "true"
