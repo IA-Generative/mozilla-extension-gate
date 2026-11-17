@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: mozilla-extension-gate
+  repository: ghcr.io/ia-generative/mozilla-extension-gate/server
   pullPolicy: IfNotPresent
   tag: ""  # Defaults to Chart.appVersion if not set
 
