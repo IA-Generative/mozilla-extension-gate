@@ -86,55 +86,6 @@ config:
   artifactsPrefix: "artifacts"
   manifestsPrefix: "manifests"
 
-# Secrets configuration
-# Each secret can be provided as:
-#
-# EXAMPLES:
-#
-# Option 1: Plaintext (development only - never commit secrets!)
-# secrets:
-#   github:
-#     token:
-#       value: "ghp_xxxxxxxxxxxx"
-#   s3:
-#     accessKeyId:
-#       value: "rustfsadmin"
-#     secretAccessKey:
-#       value: "rustfsadmin123"
-#
-# Option 2: Reference existing K8s Secrets (recommended for production)
-# kubectl create secret generic github-credentials --from-literal=token="ghp_..."
-# kubectl create secret generic s3-credentials \
-#   --from-literal=access-key-id="AKIA..." \
-#   --from-literal=secret-access-key="wJalr..."
-#
-# Then set in values:
-# secrets:
-#   github:
-#     token:
-#       secretKeyRef:
-#         name: github-credentials
-#         key: token
-#   s3:
-#     accessKeyId:
-#       secretKeyRef:
-#         name: s3-credentials
-#         key: access-key-id
-#     secretAccessKey:
-#       secretKeyRef:
-#         name: s3-credentials
-#         key: secret-access-key
-#
-secrets:
-  github:
-    token:
-      value: ""
-  s3:
-    accessKeyId:
-      value: ""
-    secretAccessKey:
-      value: ""
-
 # Environment variables for the pod
 env: []
 
