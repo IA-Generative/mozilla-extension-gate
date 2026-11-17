@@ -1,0 +1,39 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    environment:
+      PORT: "8080"
+      PUBLIC_URL: http://localhost:8082
+      S3_ACCESS_KEY_ID: rustfsadmin
+      S3_SECRET_ACCESS_KEY: rustfsadmin123
+      S3_BUCKET: test
+      S3_REGION: us-east-1
+      S3_ENDPOINT: http://rustfs:9000
+      GITHUB_TOKEN: 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
+      GITHUB_REPOSITORY: ArnaudTA/gubexplorer
+      ARTIFACT_BASE_URL: http://localhost:9001/test/artifacts/
+      PROXY_ARTIFACT_ENABLED: "true"
+    ports:
+      - "8082:8080"
+    volumes:
+      - .:/app
+      - go-mod-cache:/go/pkg/mod
+
+  rustfs:
+    image: rustfs/rustfs:latest
+    command: --console-address ":9001"
+    environment:
+      RUSTFS_ACCESS_KEY: rustfsadmin
+      RUSTFS_SECRET_KEY: rustfsadmin123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - rustfs_data:/data
+
+volumes:
+  rustfs_data:
+  go-mod-cache:
