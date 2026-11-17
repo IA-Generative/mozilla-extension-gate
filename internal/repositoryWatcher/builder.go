@@ -16,13 +16,13 @@ type Application struct {
 	Gecko struct {
 		StrictMinVersion *string `json:"strict_min_version,omitempty"`
 		StrictMaxVersion *string `json:"strict_max_version,omitempty"`
-	} `json:"gecko,omitempty"`
+	} `json:"gecko"`
 }
 
 type UpdateElement struct {
-	Version      string  `json:"version"`
-	UpdateLink   string  `json:"update_link"`
-	UpdateHash   *string `json:"update_hash,omitempty"`
+	Version      string       `json:"version"`
+	UpdateLink   string       `json:"update_link"`
+	UpdateHash   *string      `json:"update_hash,omitempty"`
 	Applications *Application `json:"applications,omitempty"`
 }
 type UpdateManifest struct {

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"path/filepath"
+	"slices"
 
 	"github.com/IA-Generative/mozilla-extension-gate/internal/config"
 	"github.com/IA-Generative/mozilla-extension-gate/internal/lib"
@@ -106,10 +107,8 @@ func (s *RepositoryWatcher) ListArtifacts() ([]string, error) {
 }
 
 func (s *RepositoryWatcher) CheckArtifactHasManifest(artifact string, manifests []string) (bool, error) {
-	for _, manifest := range manifests {
-		if manifest == artifact+".manifest.json" {
-			return true, nil
-		}
+	if slices.Contains(manifests, artifact+".manifest.json") {
+		return true, nil
 	}
 	return false, nil
 }

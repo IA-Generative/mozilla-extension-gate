@@ -16,7 +16,6 @@ import (
 	"go.uber.org/zap"
 )
 
-
 type S3Provider struct {
 	client *s3.Client
 	bucket string
@@ -149,8 +148,7 @@ func (p *S3Provider) Exists(ctx context.Context, key string) (bool, error) {
 		Key:    &key,
 	})
 	if err != nil {
-		var notFoundErr *s3types.NotFound
-		if errors.As(err, &notFoundErr) {
+		if _, ok := errors.AsType[*s3types.NotFound](err); ok {
 			return false, nil
 		}
 		return false, err

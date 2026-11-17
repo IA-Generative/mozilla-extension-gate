@@ -24,8 +24,6 @@ FROM base AS builder
 COPY . ./
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /tmp/server ./cmd/server
 WORKDIR /tmp
-RUN mkdir docs
-RUN WRITE_SPEC_ONLY=true ./server
 
 FROM alpine:3.18 AS prod
 
@@ -36,7 +34,6 @@ WORKDIR /app
 RUN apk add --no-cache ca-certificates
 
 COPY --from=builder /tmp/server /app/server
-COPY --from=builder /workspace/backend/config /app/config
 
 EXPOSE 8080
 
