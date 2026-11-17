@@ -1,0 +1,14 @@
+# Changelog
+
+## [1.1.0](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.0.0...v1.1.0) (2026-11-17)
+
+
+### Features
+
+* init prroject ([c868883](https://github.com/IA-Generative/mozilla-extension-gate/commit/c868883ce55b721a726864657fc1e1137c40b78f))
+* update image repository and add CI/CD workflows ([43dcb15](https://github.com/IA-Generative/mozilla-extension-gate/commit/43dcb154c4552076031a2b335b4f6abed26c202a))
+
+
+### Bug Fixes
+
+* explicitly specify release-please config and manifest file paths ([2a0a27b](https://github.com/IA-Generative/mozilla-extension-gate/commit/2a0a27b070791beef7b27be89f35705b21ff5de6))
