@@ -10,7 +10,7 @@ import (
 )
 
 type Gecko struct {
-	Id *string `json:"id"`
+	Id        *string `json:"id"`
 	UpdateUrl *string `json:"update_url"`
 }
 
@@ -20,16 +20,16 @@ type BrowserSpecificSettings struct {
 
 type Manifest struct {
 	// ManifestVersion *string `json:"manifest_version"`
-	Version string `json:"version"`
-	Description string `json:"description"`
-	Name string `json:"name"`
+	Version                 string                   `json:"version"`
+	Description             string                   `json:"description"`
+	Name                    string                   `json:"name"`
 	BrowserSpecificSettings *BrowserSpecificSettings `json:"browser_specific_settings"`
 }
 
 func ReadZip(data []byte) (*zip.Reader, error) {
-    reader := bytes.NewReader(data)
+	reader := bytes.NewReader(data)
 
-    return zip.NewReader(reader, int64(len(data)))
+	return zip.NewReader(reader, int64(len(data)))
 }
 
 func ExtractManifestFromArchive(data []byte) (*Manifest, error) {
@@ -47,15 +47,8 @@ func ExtractManifestFromArchive(data []byte) (*Manifest, error) {
 			return nil, err
 		}
 		log.Println("Found manifest.json in archive")
-		// save manifest.json content
 		content, err := io.ReadAll(fileInArchive)
 		if err != nil {
-			return nil, err
-		}
-		// write on disk
-		err = os.WriteFile("manifest.json", content, 0644)
-		if err != nil {
-			log.Println("Failed to write manifest.json to disk")
 			return nil, err
 		}
 

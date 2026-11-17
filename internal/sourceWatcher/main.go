@@ -95,7 +95,7 @@ func (s *SourceWatcher) ProcessXPIAssets(xpiAssets []sourceProviderLib.ReleaseAs
 	anyChanges := false
 	ctx := context.Background()
 	for _, asset := range xpiAssets {
-		key := repositories.BuildS3Key(s.config.S3.ArtifactsPrefix, asset.Name)
+		key := repositories.BuildKey(s.config.ArtifactsPrefix, asset.Name)
 		exists, err := s.Repo.Exists(ctx, key)
 		if err != nil {
 			s.logger.Error("Failed to check if file exists", zap.Error(err))

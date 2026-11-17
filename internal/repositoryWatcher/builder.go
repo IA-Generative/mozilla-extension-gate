@@ -40,7 +40,7 @@ func (s *RepositoryWatcher) GetUpdateManifest() *UpdateManifest {
 
 func (s *RepositoryWatcher) BuildUpdateManifest() error {
 	ctx := context.Background()
-	manifestsKeys, err := s.Repo.List(ctx, s.config.S3.ManifestsPrefix)
+	manifestsKeys, err := s.Repo.List(ctx, s.config.ManifestsPrefix)
 	if err != nil {
 		s.logger.Error("Failed to list manifests", zap.Error(err))
 		return err
@@ -90,7 +90,7 @@ func (s *RepositoryWatcher) BuildUpdateManifest() error {
 		// remove the .manifest.json from key
 
 		artifactBaseName := strings.TrimSuffix(key, ".manifest.json")
-		artifactBaseName = strings.TrimPrefix(artifactBaseName, s.config.S3.ManifestsPrefix+"/")
+		artifactBaseName = strings.TrimPrefix(artifactBaseName, s.config.ManifestsPrefix+"/")
 		update := UpdateElement{
 			Version:    manifest.Version,
 			UpdateLink: s.buildUpdateLink(artifactBaseName),
@@ -116,7 +116,7 @@ func (s *RepositoryWatcher) BuildUpdateManifest() error {
 
 func (s *RepositoryWatcher) buildUpdateLink(artifactBaseName string) string {
 	if s.config.Server.ProxyArtifactEnabled {
-		return s.config.Server.PublicURL + "/artifacts/" + artifactBaseName
+		return s.config.Server.PublicURL + "/" + s.config.ArtifactsPrefix + "/" + artifactBaseName
 	}
 	return s.config.Server.ArtifactBaseUrl + artifactBaseName
 }

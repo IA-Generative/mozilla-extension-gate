@@ -1,0 +1,22 @@
+---
+# Source: mozilla-extension-gate/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: a-mozilla-extension-gate
+  labels:
+    helm.sh/chart: mozilla-extension-gate-0.1.0
+    app.kubernetes.io/name: mozilla-extension-gate
+    app.kubernetes.io/instance: a
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: mozilla-extension-gate
+    app.kubernetes.io/instance: a

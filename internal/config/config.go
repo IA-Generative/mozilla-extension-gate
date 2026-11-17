@@ -8,9 +8,11 @@ import (
 )
 
 type Config struct {
-	Server ServerConfig `yaml:"server"`
-	Github GithubConfig `yaml:"github"`
-	S3     S3Config     `yaml:"s3"`
+	Server          ServerConfig `yaml:"server"`
+	Github          GithubConfig `yaml:"github"`
+	S3              S3Config     `yaml:"s3"`
+	ArtifactsPrefix string       `yaml:"artifacts_prefix"`
+	ManifestsPrefix string       `yaml:"manifests_prefix"`
 }
 
 type GithubConfig struct {
@@ -25,14 +27,13 @@ type S3Config struct {
 	Bucket          string `yaml:"s3_bucket"`
 	Region          string `yaml:"s3_region"`
 	Endpoint        string `yaml:"s3_endpoint"`
-	ArtifactsPrefix string `yaml:"s3_artifacts_prefix"`
-	ManifestsPrefix string `yaml:"s3_manifests_prefix"`
 }
 
 type ServerConfig struct {
 	Env                  string `yaml:"env"`
 	Port                 string `yaml:"port"`
 	PublicURL            string `yaml:"public_url"`
+	BasePath             string `yaml:"base_path"`
 	Version              string `yaml:"version"`
 	InstanceID           string `yaml:"instance_id"`
 	ArtifactBaseUrl      string `yaml:"artifact_base_url"`
@@ -52,6 +53,7 @@ func defaultConfig() *Config {
 			Env:        "development",
 			Port:       "8080",
 			PublicURL:  "http://localhost:8080",
+			BasePath:   "/",
 			InstanceID: "UNKNOWN",
 		},
 		Github: GithubConfig{
@@ -61,6 +63,8 @@ func defaultConfig() *Config {
 		S3: S3Config{
 			Region: "us-east-1",
 		},
+		ArtifactsPrefix: "artifacts",
+		ManifestsPrefix: "manifests",
 	}
 }
 
@@ -68,6 +72,7 @@ func applyEnvOverrides(config *Config) {
 	config.Server.Env = getenv("ENV", config.Server.Env)
 	config.Server.Port = getenv("PORT", config.Server.Port)
 	config.Server.PublicURL = getenv("PUBLIC_URL", config.Server.PublicURL)
+	config.Server.BasePath = getenv("BASE_PATH", config.Server.BasePath)
 	config.Server.Version = getenv("APP_VERSION", config.Server.Version)
 	config.Server.InstanceID = getenv("INSTANCE_ID", func() string {
 		config.Server.ArtifactBaseUrl = getenv("ARTIFACT_BASE_URL", config.Server.ArtifactBaseUrl)
@@ -86,8 +91,8 @@ func applyEnvOverrides(config *Config) {
 	config.S3.Bucket = getenv("S3_BUCKET", config.S3.Bucket)
 	config.S3.Region = getenv("S3_REGION", config.S3.Region)
 	config.S3.Endpoint = getenv("S3_ENDPOINT", config.S3.Endpoint)
-	config.S3.ArtifactsPrefix = getenv("S3_ARTIFACTS_PREFIX", config.S3.ArtifactsPrefix, "artifacts")
-	config.S3.ManifestsPrefix = getenv("S3_MANIFESTS_PREFIX", config.S3.ManifestsPrefix, "manifests")
+	config.ArtifactsPrefix = getenv("ARTIFACTS_PREFIX", config.ArtifactsPrefix)
+	config.ManifestsPrefix = getenv("MANIFESTS_PREFIX", config.ManifestsPrefix)
 }
 
 func getDuration(key string, fallback time.Duration) time.Duration {

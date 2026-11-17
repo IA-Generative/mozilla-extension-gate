@@ -7,6 +7,7 @@ services:
     environment:
       PORT: "8080"
       PUBLIC_URL: http://localhost:8082
+      BASE_PATH: /
       S3_ACCESS_KEY_ID: rustfsadmin
       S3_SECRET_ACCESS_KEY: rustfsadmin123
       S3_BUCKET: test

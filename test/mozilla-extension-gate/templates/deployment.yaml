@@ -1,0 +1,78 @@
+---
+# Source: mozilla-extension-gate/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: a-mozilla-extension-gate
+  labels:
+    helm.sh/chart: mozilla-extension-gate-0.1.0
+    app.kubernetes.io/name: mozilla-extension-gate
+    app.kubernetes.io/instance: a
+    app.kubernetes.io/version: "1.0.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mozilla-extension-gate
+      app.kubernetes.io/instance: a
+  template:
+    metadata:
+      annotations:
+        checksum/config: 429d073c082eed2ce356af08e183ed4df1a2498c23e849067cb46da529976d64
+      labels:
+        app.kubernetes.io/name: mozilla-extension-gate
+        app.kubernetes.io/instance: a
+    spec:
+      serviceAccountName: a-mozilla-extension-gate
+      securityContext:
+        {}
+      containers:
+      - name: mozilla-extension-gate
+        securityContext:
+            {}
+        image: "mozilla-extension-gate:1.0.0"
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: a-mozilla-extension-gate
+        env:
+        # GitHub Token
+        - name: GITHUB_TOKEN
+          value: ""
+
+        # S3 Access Key ID
+        - name: S3_ACCESS_KEY_ID
+          value: ""
+
+        # S3 Secret Access Key
+        - name: S3_SECRET_ACCESS_KEY
+          value: ""
+
+        # Additional custom environment variables
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+        resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi

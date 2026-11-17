@@ -1,0 +1,14 @@
+apiVersion: v2
+name: mozilla-extension-gate
+description: A Helm chart for mozilla-extension-gate application
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - mozilla
+  - extension
+  - gate
+  - api
+maintainers:
+  - name: ArnaudTA
+    email: arnaud@example.com

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mozilla-extension-gate.fullname" . }}
+  labels:
+    {{- include "mozilla-extension-gate.labels" . | nindent 4 }}
+data:
+  # Server Configuration
+  ENV: {{ .Values.config.server.env | quote }}
+  PORT: {{ .Values.config.server.port | quote }}
+  PUBLIC_URL: {{ .Values.config.server.publicUrl | quote }}
+  BASE_PATH: {{ .Values.config.server.basePath | quote }}
+  APP_VERSION: {{ .Values.config.server.version | quote }}
+  INSTANCE_ID: {{ .Values.config.server.instanceId | quote }}
+  ARTIFACT_BASE_URL: {{ .Values.config.server.artifactBaseUrl | quote }}
+  PROXY_ARTIFACT_ENABLED: {{ .Values.config.server.proxyArtifactEnabled | quote }}
+  ARTIFACTS_PREFIX: {{ .Values.config.artifactsPrefix | quote }}
+  MANIFESTS_PREFIX: {{ .Values.config.manifestsPrefix | quote }}
+
+  # GitHub Configuration
+  GITHUB_REPOSITORY: {{ .Values.config.github.repository | quote }}
+  GITHUB_SYNC_INTERVAL: {{ .Values.config.github.syncInterval | quote }}
+
+  # S3 Configuration
+  S3_BUCKET: {{ .Values.config.s3.bucket | quote }}
+  S3_REGION: {{ .Values.config.s3.region | quote }}
+  S3_ENDPOINT: {{ .Values.config.s3.endpoint | quote }}

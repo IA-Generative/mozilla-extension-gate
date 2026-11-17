@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "mozilla-extension-gate.fullname" . }}
+  labels:
+    {{- include "mozilla-extension-gate.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "mozilla-extension-gate.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "mozilla-extension-gate.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "mozilla-extension-gate.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.config.server.port }}
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: {{ include "mozilla-extension-gate.fullname" . }}
+        env:
+        # GitHub Token
+        {{- with .Values.secrets.github.token }}
+        {{- if eq .type "value" }}
+        - name: GITHUB_TOKEN
+          value: {{ .value | quote }}
+        {{- else if eq .type "secretRef" }}
+        - name: GITHUB_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: {{ .secretRef.name }}
+              key: {{ .secretRef.key }}
+        {{- end }}
+        {{- end }}
+
+        # S3 Access Key ID
+        {{- with .Values.secrets.s3.accessKeyId }}
+        {{- if eq .type "value" }}
+        - name: S3_ACCESS_KEY_ID
+          value: {{ .value | quote }}
+        {{- else if eq .type "secretRef" }}
+        - name: S3_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: {{ .secretRef.name }}
+              key: {{ .secretRef.key }}
+        {{- end }}
+        {{- end }}
+
+        # S3 Secret Access Key
+        {{- with .Values.secrets.s3.secretAccessKey }}
+        {{- if eq .type "value" }}
+        - name: S3_SECRET_ACCESS_KEY
+          value: {{ .value | quote }}
+        {{- else if eq .type "secretRef" }}
+        - name: S3_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: {{ .secretRef.name }}
+              key: {{ .secretRef.key }}
+        {{- end }}
+        {{- end }}
+
+        # Additional custom environment variables
+        {{- with .Values.env }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+
+        {{- with .Values.volumeMounts }}
+        volumeMounts:
+          {{- toYaml . | nindent 12 }}
+        {{- end }}
+
+      {{- with .Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

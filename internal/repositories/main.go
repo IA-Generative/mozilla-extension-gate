@@ -27,6 +27,6 @@ func GetRepository(cfg config.Config, logger *zap.Logger) Repository {
 	return r
 }
 
-func BuildS3Key(prefix, fileName string) string {
+func BuildKey(prefix, fileName string) string {
 	return prefix + "/" + fileName
 }

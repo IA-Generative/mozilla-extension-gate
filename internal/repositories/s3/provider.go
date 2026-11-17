@@ -128,7 +128,6 @@ func (p *S3Provider) GetFile(ctx context.Context, key string) (*io.ReadCloser, e
 	if err != nil {
 		return nil, err
 	}
-	p.logger.Info("object", zap.Any("A;", output.ChecksumType) )
 	return &output.Body, nil
 }
 

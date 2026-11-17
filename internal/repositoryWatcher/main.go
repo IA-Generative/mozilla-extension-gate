@@ -80,7 +80,7 @@ func (s *RepositoryWatcher) Sync() error {
 
 func (s *RepositoryWatcher) ListManifests() ([]string, error) {
 	ctx := context.Background()
-	manifests, err := s.Repo.List(ctx, s.config.S3.ManifestsPrefix)
+	manifests, err := s.Repo.List(ctx, s.config.ManifestsPrefix)
 	if err != nil {
 		s.logger.Error("Failed to list manifests", zap.Error(err))
 		return nil, err
@@ -90,7 +90,8 @@ func (s *RepositoryWatcher) ListManifests() ([]string, error) {
 
 func (s *RepositoryWatcher) ListArtifacts() ([]string, error) {
 	ctx := context.Background()
-	artifacts, err := s.Repo.List(ctx, s.config.S3.ArtifactsPrefix)
+	s.logger.Info("Listing artifacts", zap.String("prefix", s.config.ArtifactsPrefix))
+	artifacts, err := s.Repo.List(ctx, s.config.ArtifactsPrefix)
 	if err != nil {
 		s.logger.Error("Failed to list artifacts", zap.Error(err))
 		return nil, err
@@ -127,7 +128,7 @@ func (s *RepositoryWatcher) CreateArtifactManifest(artifact string) error {
 		s.logger.Error("Failed to extract manifest from artifact", zap.Error(err))
 		return err
 	}
-	manifestKey := repositories.BuildS3Key(s.config.S3.ManifestsPrefix, artifactBase+".manifest.json")
+	manifestKey := repositories.BuildKey(s.config.ManifestsPrefix, artifactBase+".manifest.json")
 	jsonData, err := json.Marshal(xpiManifest)
 	err = s.Repo.Upload(ctx, manifestKey, jsonData)
 	if err != nil {
@@ -140,7 +141,7 @@ func (s *RepositoryWatcher) CreateArtifactManifest(artifact string) error {
 
 func (s *RepositoryWatcher) GetArtifact(artifact string) ([]byte, error) {
 	ctx := context.Background()
-	key := fmt.Sprintf("%s/%s", s.config.S3.ArtifactsPrefix, artifact)
+	key := fmt.Sprintf("%s/%s", s.config.ArtifactsPrefix, artifact)
 	data, err := s.Repo.Download(ctx, key)
 	if err != nil {
 		s.logger.Error("Failed to download artifact", zap.String("artifact", key), zap.Error(err))
