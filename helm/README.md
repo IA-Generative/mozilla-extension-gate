@@ -1,241 +1,100 @@
-# Mozilla Extension Gate Helm Chart
+# mozilla-extension-gate
 
-Helm chart pour déployer l'application mozilla-extension-gate sur Kubernetes.
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
 
-## Installation
+A Helm chart for mozilla-extension-gate application
 
-### Installation basique
+## Maintainers
 
-```bash
-helm install my-release ./helm
-```
+| Name | Email | Url |
+| ---- | ------ | --- |
+| ArnaudTA | <arnaud@example.com> |  |
 
-### Installation avec des valeurs personnalisées
+## Values
 
-```bash
-helm install my-release ./helm \
-  --set config.server.publicUrl="https://api.example.com" \
-  --set config.github.repository="myorg/myrepo" \
-  --set secrets.github.token="ghp_xxxxxxxxxxxx" \
-  --set config.s3.bucket="my-bucket"
-```
+### Servicename
 
-## Configuration
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| serviceMonitor.annotations | object | `{}` | Prometheus ServiceMonitor annotations. |
+| serviceMonitor.enabled | bool | `true` | Enable a prometheus ServiceMonitor. |
+| serviceMonitor.endpoints[0] | object | `{"honorLabels":false,"interval":"30s","metricRelabelings":[],"path":"/metrics","relabelings":[],"scheme":"","scrapeTimeout":"10s","selector":{},"tlsConfig":{}}` | Prometheus ServiceMonitor interval. |
+| serviceMonitor.endpoints[0].honorLabels | bool | `false` | When true, honorLabels preserves the metric’s labels when they collide with the target’s labels. |
+| serviceMonitor.endpoints[0].metricRelabelings | list | `[]` | Prometheus MetricRelabelConfigs to apply to samples before ingestion. |
+| serviceMonitor.endpoints[0].path | string | `"/metrics"` | Path used by the Prometheus ServiceMonitor to scrape metrics. |
+| serviceMonitor.endpoints[0].relabelings | list | `[]` | Prometheus RelabelConfigs to apply to samples before scraping. |
+| serviceMonitor.endpoints[0].scheme | string | `""` | Prometheus ServiceMonitor scheme. |
+| serviceMonitor.endpoints[0].scrapeTimeout | string | `"10s"` | Prometheus ServiceMonitor scrapeTimeout. If empty, Prometheus uses the global scrape timeout unless it is less than the target's scrape interval value in which the latter is used. |
+| serviceMonitor.endpoints[0].selector | object | `{}` | Prometheus ServiceMonitor selector. |
+| serviceMonitor.endpoints[0].tlsConfig | object | `{}` | Prometheus ServiceMonitor tlsConfig. |
+| serviceMonitor.labels | object | `{}` | Prometheus ServiceMonitor labels. |
 
-Toutes les configurations de l'application sont gérées via le fichier `values.yaml`.
+### Other Values
 
-### Configuration du serveur
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| affinity | object | `{}` |  |
+| autoscaling.enabled | bool | `false` |  |
+| autoscaling.maxReplicas | int | `100` |  |
+| autoscaling.minReplicas | int | `1` |  |
+| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
+| config.artifactsPrefix | string | `"artifacts"` |  |
+| config.github.repository | string | `""` |  |
+| config.github.syncInterval | string | `"5m"` |  |
+| config.manifestsPrefix | string | `"manifests"` |  |
+| config.s3.accessKeyId | string | `""` |  |
+| config.s3.bucket | string | `""` |  |
+| config.s3.endpoint | string | `""` |  |
+| config.s3.region | string | `"us-east-1"` |  |
+| config.s3.secretAccessKey | string | `""` |  |
+| config.server.artifactBaseUrl | string | `""` |  |
+| config.server.basePath | string | `"/"` |  |
+| config.server.env | string | `"production"` |  |
+| config.server.instanceId | string | `"gateway-instance"` |  |
+| config.server.port | string | `"8080"` |  |
+| config.server.proxyArtifactEnabled | bool | `false` |  |
+| config.server.publicUrl | string | `"http://localhost:8080"` |  |
+| config.server.version | string | `"1.0"` |  |
+| env | list | `[]` |  |
+| fullnameOverride | string | `""` |  |
+| image.pullPolicy | string | `"IfNotPresent"` |  |
+| image.repository | string | `"ghcr.io/ia-generative/mozilla-extension-gate/server"` |  |
+| image.tag | string | `""` |  |
+| imagePullSecrets | list | `[]` |  |
+| ingress.annotations | object | `{}` |  |
+| ingress.className | string | `""` |  |
+| ingress.enabled | bool | `false` |  |
+| ingress.hosts[0].host | string | `"chart-example.local"` |  |
+| ingress.hosts[0].paths[0].path | string | `"/"` |  |
+| ingress.hosts[0].paths[0].pathType | string | `"Prefix"` |  |
+| ingress.tls | list | `[]` |  |
+| nameOverride | string | `""` |  |
+| nodeAffinity | object | `{}` |  |
+| nodeSelector | object | `{}` |  |
+| podAnnotations | object | `{}` |  |
+| podSecurityContext | object | `{}` |  |
+| replicaCount | int | `1` |  |
+| resources.limits.cpu | string | `"500m"` |  |
+| resources.limits.memory | string | `"512Mi"` |  |
+| resources.requests.cpu | string | `"250m"` |  |
+| resources.requests.memory | string | `"256Mi"` |  |
+| secrets.github.token.type | string | `"value"` |  |
+| secrets.github.token.value | string | `""` |  |
+| secrets.s3.accessKeyId.type | string | `"value"` |  |
+| secrets.s3.accessKeyId.value | string | `""` |  |
+| secrets.s3.secretAccessKey.type | string | `"value"` |  |
+| secrets.s3.secretAccessKey.value | string | `""` |  |
+| securityContext | object | `{}` |  |
+| service.annotations | object | `{}` |  |
+| service.port | int | `80` |  |
+| service.targetPort | int | `8080` |  |
+| service.type | string | `"ClusterIP"` |  |
+| serviceAccount.annotations | object | `{}` |  |
+| serviceAccount.create | bool | `true` |  |
+| serviceAccount.name | string | `""` |  |
+| tolerations | list | `[]` |  |
+| volumeMounts | list | `[]` |  |
+| volumes | list | `[]` |  |
 
-```yaml
-config:
-  server:
-    env: "production"              # Environnement (development/production)
-    port: "8080"                   # Port d'écoute
-    publicUrl: "http://api.local"  # URL publique
-    basePath: "/"                  # Chemin de base
-    version: "1.0"                 # Version de l'app
-    instanceId: "gateway-instance" # Identifiant d'instance
-    artifactBaseUrl: ""            # URL de base des artefacts
-    proxyArtifactEnabled: false    # Activer le proxy d'artefacts
-```
-
-### Configuration GitHub
-
-```yaml
-config:
-  github:
-    repository: "org/repo"      # Repository GitHub
-    syncInterval: "5m"          # Intervalle de sync
-```
-
-Les secrets doivent être fournis séparément:
-
-```yaml
-secrets:
-  github:
-    token: "ghp_xxxxxxxxxxxx"   # Token GitHub (base64 encodé automatiquement)
-```
-
-### Configuration S3
-
-```yaml
-config:
-  s3:
-    bucket: "my-bucket"          # Nom du bucket
-    region: "us-east-1"           # Région AWS
-    endpoint: "https://s3.aws..." # Endpoint S3
-
-secrets:
-  s3:
-    accessKeyId: "AKIAIOSFODNN7EXAMPLE"
-    secretAccessKey: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
-```
-
-## Déploiement avec values override
-
-### Via fichier values
-
-Créer un fichier `my-values.yaml`:
-
-```yaml
-config:
-  server:
-    env: production
-    publicUrl: https://api.example.com
-  github:
-    repository: myorg/myrepo
-  s3:
-    bucket: my-bucket
-    region: eu-west-1
-    endpoint: https://s3.example.com
-
-secrets:
-  github:
-    token: ghp_xxxxxxxxxxxx
-  s3:
-    accessKeyId: AKIA...
-    secretAccessKey: wJalr...
-```
-
-Puis déployer:
-
-```bash
-helm install my-release ./helm -f my-values.yaml
-```
-
-### Variables d'environnement additionnelles
-
-Pour ajouter des variables d'environnement supplémentaires:
-
-```yaml
-env:
-  - name: DEBUG
-    value: "true"
-  - name: LOG_LEVEL
-    value: "debug"
-```
-
-## Mise à jour
-
-```bash
-helm upgrade my-release ./helm -f my-values.yaml
-```
-
-## Désinstallation
-
-```bash
-helm uninstall my-release
-```
-
-## Gestion des secrets
-
-Les secrets (GitHub token, S3 credentials) sont gérés de manière flexible:
-
-### Option 1: Plaintext dans values (développement uniquement)
-
-```yaml
-secrets:
-  github:
-    token:
-      type: "value"
-      value: "ghp_xxxxxxxxxxxx"
-  s3:
-    accessKeyId:
-      type: "value"
-      value: "AKIA..."
-    secretAccessKey:
-      type: "value"
-      value: "wJalr..."
-```
-
-**⚠️ DANGER**: Ne jamais commiter en plaintext en production!
-
-### Option 2: Référencer des Secrets Kubernetes existants (RECOMMANDÉ)
-
-```yaml
-secrets:
-  github:
-    token:
-      type: "secretRef"
-      secretRef:
-        name: github-credentials
-        key: token
-  s3:
-    accessKeyId:
-      type: "secretRef"
-      secretRef:
-        name: s3-credentials
-        key: access-key-id
-    secretAccessKey:
-      type: "secretRef"
-      secretRef:
-        name: s3-credentials
-        key: secret-access-key
-```
-
-Créer les secrets Kubernetes avant le déploiement:
-
-```bash
-kubectl create secret generic github-credentials \
-  --from-literal=token="ghp_xxxxxxxxxxxx"
-
-kubectl create secret generic s3-credentials \
-  --from-literal=access-key-id="AKIA..." \
-  --from-literal=secret-access-key="wJalr..."
-```
-
-### Option 3: External Secrets Operator (AWS Secrets Manager, Vault, etc.)
-
-```bash
-helm repo add external-secrets https://charts.external-secrets.io
-helm install external-secrets external-secrets/external-secrets -n external-secrets-system --create-namespace
-```
-
-Puis créer une SecretStore et ExternalSecret.
-
-## Ressources
-
-Les ressources par défaut sont configurées pour un environnement de développement. Pour la production:
-
-```yaml
-resources:
-  limits:
-    cpu: 1000m
-    memory: 1Gi
-  requests:
-    cpu: 500m
-    memory: 512Mi
-```
-
-## Autoscaling
-
-Pour activer l'autoscaling:
-
-```yaml
-autoscaling:
-  enabled: true
-  minReplicas: 2
-  maxReplicas: 10
-  targetCPUUtilizationPercentage: 80
-```
-
-## Ingress
-
-Pour exposer l'application via Ingress:
-
-```yaml
-ingress:
-  enabled: true
-  className: nginx
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-  hosts:
-    - host: api.example.com
-      paths:
-        - path: /
-          pathType: Prefix
-  tls:
-    - secretName: api-tls
-      hosts:
-        - api.example.com
-```
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)
