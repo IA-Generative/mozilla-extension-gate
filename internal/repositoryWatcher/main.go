@@ -94,7 +94,6 @@ func (s *RepositoryWatcher) ListArtifacts() ([]string, error) {
 	s.logger.Info("Listing artifacts", zap.String("prefix", s.config.ArtifactsPrefix))
 	artifacts, err := s.Repo.List(ctx, s.config.ArtifactsPrefix)
 	if err != nil {
-		s.logger.Error("Failed to list artifacts", zap.Error(err))
 		return nil, err
 	}
 	filteredArtifacts := []string{}
