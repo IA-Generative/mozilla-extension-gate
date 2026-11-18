@@ -72,7 +72,7 @@ config:
     env: "production"
     port: "8080"
     publicUrl: "http://localhost:8080"
-    basePath: "/"
+    basePath: ""
     version: "1.0"
     instanceId: "gateway-instance"
     artifactBaseUrl: ""
