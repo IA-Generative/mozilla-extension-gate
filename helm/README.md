@@ -1,6 +1,6 @@
 # mozilla-extension-gate
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.1.0](https://img.shields.io/badge/AppVersion-1.1.0-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.2.0](https://img.shields.io/badge/AppVersion-1.2.0-informational?style=flat-square)
 
 A Helm chart for mozilla-extension-gate application
 
@@ -56,6 +56,7 @@ A Helm chart for mozilla-extension-gate application
 | config.server.publicUrl | string | `"http://localhost:8080"` |  |
 | config.server.version | string | `"1.0"` |  |
 | env | list | `[]` |  |
+| extraCAs | object | `{}` |  |
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ghcr.io/ia-generative/mozilla-extension-gate/server"` |  |
@@ -68,22 +69,23 @@ A Helm chart for mozilla-extension-gate application
 | ingress.hosts[0].paths[0].path | string | `"/"` |  |
 | ingress.hosts[0].paths[0].pathType | string | `"Prefix"` |  |
 | ingress.tls | list | `[]` |  |
+| initContainer.resources.limits.cpu | string | `"500m"` |  |
+| initContainer.resources.limits.memory | string | `"512Mi"` |  |
+| initContainer.resources.requests.cpu | string | `"250m"` |  |
+| initContainer.resources.requests.memory | string | `"256Mi"` |  |
 | nameOverride | string | `""` |  |
 | nodeAffinity | object | `{}` |  |
 | nodeSelector | object | `{}` |  |
 | podAnnotations | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
+| proxy.httpProxy | string | `""` |  |
+| proxy.httpsProxy | string | `""` |  |
+| proxy.noProxy | string | `""` |  |
 | replicaCount | int | `1` |  |
 | resources.limits.cpu | string | `"500m"` |  |
 | resources.limits.memory | string | `"512Mi"` |  |
 | resources.requests.cpu | string | `"250m"` |  |
 | resources.requests.memory | string | `"256Mi"` |  |
-| secrets.github.token.type | string | `"value"` |  |
-| secrets.github.token.value | string | `""` |  |
-| secrets.s3.accessKeyId.type | string | `"value"` |  |
-| secrets.s3.accessKeyId.value | string | `""` |  |
-| secrets.s3.secretAccessKey.type | string | `"value"` |  |
-| secrets.s3.secretAccessKey.value | string | `""` |  |
 | securityContext | object | `{}` |  |
 | service.annotations | object | `{}` |  |
 | service.port | int | `80` |  |

@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.1.0...v1.2.0) (2026-11-18)
+
+
+### Features
+
+* add support for extra CA certificates and HTTP proxy settings in deployment ([3e001b5](https://github.com/IA-Generative/mozilla-extension-gate/commit/3e001b5e3c32c3dc55c72e8a6367d992d126c04d))
+
+
+### Bug Fixes
+
+* update health check paths for liveness and readiness probes ([7e77c39](https://github.com/IA-Generative/mozilla-extension-gate/commit/7e77c3943eb8071cd4decc339c2605d5f4aaabac))
+
 ## [1.1.0](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.0.0...v1.1.0) (2026-11-17)
 
 
