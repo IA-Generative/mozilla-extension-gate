@@ -1,6 +1,6 @@
 # mozilla-extension-gate
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.2.0](https://img.shields.io/badge/AppVersion-1.2.0-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.3.0](https://img.shields.io/badge/AppVersion-1.3.0-informational?style=flat-square)
 
 A Helm chart for mozilla-extension-gate application
 
@@ -48,13 +48,14 @@ A Helm chart for mozilla-extension-gate application
 | config.s3.region | string | `"us-east-1"` |  |
 | config.s3.secretAccessKey | string | `""` |  |
 | config.server.artifactBaseUrl | string | `""` |  |
-| config.server.basePath | string | `"/"` |  |
+| config.server.basePath | string | `""` |  |
 | config.server.env | string | `"production"` |  |
 | config.server.instanceId | string | `"gateway-instance"` |  |
 | config.server.port | string | `"8080"` |  |
 | config.server.proxyArtifactEnabled | bool | `false` |  |
 | config.server.publicUrl | string | `"http://localhost:8080"` |  |
 | config.server.version | string | `"1.0"` |  |
+| config.tls.insecureSkipVerify | bool | `false` |  |
 | env | list | `[]` |  |
 | extraCAs | object | `{}` |  |
 | fullnameOverride | string | `""` |  |
