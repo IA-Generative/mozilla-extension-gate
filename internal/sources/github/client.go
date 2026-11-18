@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 
 	lib "github.com/IA-Generative/mozilla-extension-gate/internal/sources/lib"
 	"go.uber.org/zap"
@@ -155,7 +156,7 @@ func convertGithubReleasesToLibReleases(releases []GithubRelease) []lib.Release 
 	for i, r := range releases {
 		assets := convertGithubReleaseAssetsToLibReleaseAssets(r.Assets)
 		libReleases[i] = lib.Release{
-			ID:     string(r.ID),
+			ID:     strconv.FormatInt(r.ID, 10),
 			Name:   r.Name,
 			Assets: &assets,
 		}
