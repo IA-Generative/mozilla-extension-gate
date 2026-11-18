@@ -26,5 +26,7 @@ data:
   S3_REGION: {{ .Values.config.s3.region | quote }}
   S3_ENDPOINT: {{ .Values.config.s3.endpoint | quote }}
 
+  FILE_STORAGE_PATH: {{ .Values.config.fileStorage.path | quote }}
+
   # TLS Configuration
   TLS_INSECURE_SKIP_VERIFY: {{ .Values.config.tls.insecureSkipVerify | quote }}

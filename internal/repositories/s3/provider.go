@@ -122,7 +122,8 @@ func (p *S3Provider) List(ctx context.Context, prefix string) ([]string, error) 
 			return nil, err
 		}
 		for _, obj := range page.Contents {
-			keys = append(keys, *obj.Key)
+			key := path.Base(*obj.Key)
+			keys = append(keys, key)
 		}
 	}
 	return keys, nil

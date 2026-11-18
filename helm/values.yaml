@@ -91,6 +91,12 @@ config:
     accessKeyId: ""
     secretAccessKey: ""
 
+  fileStorage:
+    path: "/addons"
+    storageClassName: ""
+
+  storageType: "file"
+
   # Path prefixes
   artifactsPrefix: "artifacts"
   manifestsPrefix: "manifests"

@@ -1,0 +1,15 @@
+{{- if eq .Values.config.storageType "file" }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "mozilla-extension-gate.fullname" . }}-addons
+  labels:
+    {{- include "mozilla-extension-gate.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+      storageClassName: {{ .Values.config.fileStorage.storageClassName | default "" }}
+{{- end }}

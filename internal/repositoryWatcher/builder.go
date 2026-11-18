@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"path"
 	"strings"
 
 	"github.com/IA-Generative/mozilla-extension-gate/internal/xpi"
@@ -54,8 +55,10 @@ func (s *RepositoryWatcher) BuildUpdateManifest() error {
 	}
 	// var manifests []xpi.Manifest
 	for _, key := range manifestsKeys {
+		key = path.Base(key)
+		manifestPath := path.Join(s.config.ManifestsPrefix, key)
 		// Fetch each manifest from the repository
-		dataReadCloser, err := s.Repo.GetFile(ctx, key)
+		dataReadCloser, err := s.Repo.GetFile(ctx, manifestPath)
 		if err != nil {
 			s.logger.Error("Failed to fetch manifest", zap.String("key", key), zap.Error(err))
 			continue
@@ -116,7 +119,7 @@ func (s *RepositoryWatcher) BuildUpdateManifest() error {
 
 func (s *RepositoryWatcher) buildUpdateLink(artifactBaseName string) string {
 	if s.config.Server.ProxyArtifactEnabled {
-		return s.config.Server.PublicURL + "/" + s.config.ArtifactsPrefix + "/" + artifactBaseName
+		return s.config.Server.PublicURL + path.Join(s.config.Server.BasePath, s.config.ArtifactsPrefix, artifactBaseName)
 	}
 	return s.config.Server.ArtifactBaseUrl + artifactBaseName
 }

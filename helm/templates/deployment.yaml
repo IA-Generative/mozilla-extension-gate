@@ -116,7 +116,7 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
 
-        {{- if or .Values.volumeMounts .Values.extraCAs }}
+        {{- if or .Values.volumeMounts .Values.extraCAs (eq .Values.config.storageType "file") }}
         volumeMounts:
           {{- with .Values.volumeMounts }}
           {{- toYaml . | nindent 10 }}
@@ -126,9 +126,13 @@ spec:
             mountPath: /etc/ssl/certs
             readOnly: true
           {{- end }}
+          {{- if eq .Values.config.storageType "file" }}
+          - name: addons
+            mountPath: {{ .Values.config.fileStorage.path }}
+          {{- end }}
         {{- end }}
 
-      {{- if or .Values.volumes .Values.extraCAs }}
+      {{- if or .Values.volumes .Values.extraCAs (eq .Values.config.storageType "file") }}
       volumes:
         {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
@@ -139,6 +143,11 @@ spec:
             name: {{ include "mozilla-extension-gate.fullname" . }}-extra-cas
         - name: ssl-certs
           emptyDir: {}
+        {{- end }}
+        {{- if eq .Values.config.storageType "file" }}
+        - name: addons
+          persistentVolumeClaim:
+            claimName: {{ include "mozilla-extension-gate.fullname" . }}-addons
         {{- end }}
       {{- end }}
 

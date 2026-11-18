@@ -11,6 +11,7 @@ type Config struct {
 	Server          ServerConfig
 	Github          GithubConfig
 	S3              S3Config
+	FileStorage     FileStorageConfig
 	ArtifactsPrefix string
 	ManifestsPrefix string
 }
@@ -30,6 +31,10 @@ type S3Config struct {
 	Endpoint             string
 	UsePathStyle         bool
 	TLSInsecureSkipVerify bool
+}
+
+type FileStorageConfig struct {
+	Path string
 }
 
 type ServerConfig struct {
@@ -110,11 +115,17 @@ func applyArtifactsOverrides(config *Config) {
 	config.ArtifactsPrefix = getenv("ARTIFACTS_PREFIX", config.ArtifactsPrefix)
 	config.ManifestsPrefix = getenv("MANIFESTS_PREFIX", config.ManifestsPrefix)
 }
+
+func applyFileStorageOverrides(config *Config) {
+	config.FileStorage.Path = getenv("FILE_STORAGE_PATH", config.FileStorage.Path)
+}
+
 func applyEnvOverrides(config *Config) {
 	applyServerOverrides(config)
 	applyS3Overrides(config)
 	applyGithubOverrides(config)
 	applyArtifactsOverrides(config)
+	applyFileStorageOverrides(config)
 }
 
 func getDuration(key string, fallback time.Duration) time.Duration {

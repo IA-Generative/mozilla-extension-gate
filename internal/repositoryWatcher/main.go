@@ -113,10 +113,12 @@ func (s *RepositoryWatcher) CheckArtifactHasManifest(artifact string, manifests 
 }
 
 func (s *RepositoryWatcher) CreateArtifactManifest(artifact string) error {
-	artifactBase := filepath.Base(artifact)
+	artifactBase := path.Base(artifact)
 	s.logger.Info("Creating artifact manifest", zap.String("artifact", artifactBase))
 	ctx := context.Background()
-	artifactData, err := s.Repo.Download(ctx, artifact)
+	artifactPath := path.Join(s.config.ArtifactsPrefix, artifactBase)
+
+	artifactData, err := s.Repo.Download(ctx, artifactPath)
 	if err != nil {
 		s.logger.Error("Failed to download artifact", zap.String("artifact", artifact), zap.Error(err))
 		return err

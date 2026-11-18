@@ -8,11 +8,14 @@ services:
       PORT: "8080"
       PUBLIC_URL: http://localhost:8082
       BASE_PATH: ""
-      S3_ACCESS_KEY_ID: rustfsadmin
-      S3_SECRET_ACCESS_KEY: rustfsadmin123
-      S3_BUCKET: test
-      S3_REGION: us-east-1
-      S3_ENDPOINT: http://rustfs:9000
+      # Uncomment the following lines to enable S3 storage
+      # S3_ACCESS_KEY_ID: rustfsadmin
+      # S3_SECRET_ACCESS_KEY: rustfsadmin123
+      # S3_BUCKET: test
+      # S3_REGION: us-east-1
+      # S3_ENDPOINT: http://rustfs:9000
+      # Uncomment the following lines to enable file storage
+      FILE_STORAGE_PATH: /addons
       GITHUB_TOKEN: ""
       GITHUB_REPOSITORY: ArnaudTA/gubexplorer
       ARTIFACT_BASE_URL: http://localhost:9001/test/artifacts/
@@ -22,6 +25,7 @@ services:
     volumes:
       - .:/app
       - go-mod-cache:/go/pkg/mod
+      - ./addons:/addons
 
   rustfs:
     image: rustfs/rustfs:latest

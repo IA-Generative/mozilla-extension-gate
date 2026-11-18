@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"github.com/IA-Generative/mozilla-extension-gate/internal/config"
+	file "github.com/IA-Generative/mozilla-extension-gate/internal/repositories/file"
 	s3 "github.com/IA-Generative/mozilla-extension-gate/internal/repositories/s3"
 	"go.uber.org/zap"
 )
@@ -20,6 +21,10 @@ type Repository interface {
 }
 
 func GetRepository(cfg config.Config, logger *zap.Logger) Repository {
+	if cfg.FileStorage.Path != "" {
+		return file.NewFileProvider(cfg)
+	}
+
 	r, err := s3.NewS3Provider(cfg.S3, logger)
 	if err != nil {
 		panic(err)
