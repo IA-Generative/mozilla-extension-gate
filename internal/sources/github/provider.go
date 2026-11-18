@@ -1,6 +1,7 @@
 package github
 
 import (
+	"crypto/tls"
 	"fmt"
 	"net/http"
 	"time"
@@ -40,10 +41,17 @@ type Client struct {
 	token      string
 }
 
-func NewClient(token string) *Client {
+func NewClient(token string, tlsInsecureSkipVerify bool) *Client {
+	transport := http.DefaultTransport
+	if tlsInsecureSkipVerify {
+		transport = &http.Transport{
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, //nolint:gosec
+		}
+	}
 	return &Client{
 		httpClient: &http.Client{
-			Timeout: 15 * time.Second,
+			Timeout:   15 * time.Second,
+			Transport: transport,
 		},
 		token: token,
 	}
@@ -65,7 +73,7 @@ func NewGithubProvider(config *config.GithubConfig, logger *zap.Logger) (*Github
 	}
 	return &GithubProvider{
 		config: config,
-		client: NewClient(config.Token),
+		client: NewClient(config.Token, config.TLSInsecureSkipVerify),
 		logger: logger,
 	}, nil
 }

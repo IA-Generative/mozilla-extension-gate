@@ -95,6 +95,10 @@ config:
   artifactsPrefix: "artifacts"
   manifestsPrefix: "manifests"
 
+  # TLS configuration
+  tls:
+    insecureSkipVerify: false
+
 # Environment variables for the pod
 env: []
 

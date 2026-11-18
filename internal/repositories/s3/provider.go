@@ -3,9 +3,11 @@ package storage
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 
 	appconfig "github.com/IA-Generative/mozilla-extension-gate/internal/config"
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -36,8 +38,7 @@ func NewS3Provider(config appconfig.S3Config, logger *zap.Logger) (*S3Provider, 
 	}
 
 	ctx := context.Background()
-	cfg, err := awsconfig.LoadDefaultConfig(
-		ctx,
+	opts := []func(*awsconfig.LoadOptions) error{
 		awsconfig.WithRegion(config.Region),
 		awsconfig.WithCredentialsProvider(
 			credentials.NewStaticCredentialsProvider(
@@ -46,7 +47,15 @@ func NewS3Provider(config appconfig.S3Config, logger *zap.Logger) (*S3Provider, 
 				"",
 			),
 		),
-	)
+	}
+	if config.TLSInsecureSkipVerify {
+		opts = append(opts, awsconfig.WithHTTPClient(&http.Client{
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, //nolint:gosec
+			},
+		}))
+	}
+	cfg, err := awsconfig.LoadDefaultConfig(ctx, opts...)
 	if err != nil {
 		return nil, fmt.Errorf("loading S3 config: %w", err)
 	}
@@ -54,7 +63,7 @@ func NewS3Provider(config appconfig.S3Config, logger *zap.Logger) (*S3Provider, 
 	client := s3.NewFromConfig(cfg, func(o *s3.Options) {
 		if config.Endpoint != "" {
 			o.BaseEndpoint = aws.String(config.Endpoint)
-			o.UsePathStyle = true
+			o.UsePathStyle = config.UsePathStyle
 		}
 	})
 

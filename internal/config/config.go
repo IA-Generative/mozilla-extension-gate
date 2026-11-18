@@ -16,17 +16,20 @@ type Config struct {
 }
 
 type GithubConfig struct {
-	Repository   string
-	Token        string
-	SyncInterval time.Duration
+	Repository            string
+	Token                 string
+	SyncInterval          time.Duration
+	TLSInsecureSkipVerify bool
 }
 
 type S3Config struct {
-	AccessKeyID     string
-	SecretAccessKey string
-	Bucket          string
-	Region          string
-	Endpoint        string
+	AccessKeyID          string
+	SecretAccessKey      string
+	Bucket               string
+	Region               string
+	Endpoint             string
+	UsePathStyle         bool
+	TLSInsecureSkipVerify bool
 }
 
 type ServerConfig struct {
@@ -62,13 +65,14 @@ func defaultConfig() *Config {
 		},
 		S3: S3Config{
 			Region: "us-east-1",
+			UsePathStyle: true,
 		},
 		ArtifactsPrefix: "artifacts",
 		ManifestsPrefix: "manifests",
 	}
 }
 
-func applyEnvOverrides(config *Config) {
+func applyServerOverrides(config *Config) {
 	config.Server.Env = getenv("ENV", config.Server.Env)
 	config.Server.Port = getenv("PORT", config.Server.Port)
 	config.Server.PublicURL = getenv("PUBLIC_URL", config.Server.PublicURL)
@@ -83,16 +87,34 @@ func applyEnvOverrides(config *Config) {
 			return ""
 		}
 	}(), config.Server.InstanceID)
-	config.Github.Token = getenv("GITHUB_TOKEN", config.Github.Token)
-	config.Github.Repository = getenv("GITHUB_REPOSITORY", config.Github.Repository)
-	config.Github.SyncInterval = getDuration("GITHUB_SYNC_INTERVAL", config.Github.SyncInterval)
+}
+
+func applyS3Overrides(config *Config) {
 	config.S3.AccessKeyID = getenv("S3_ACCESS_KEY_ID", config.S3.AccessKeyID)
 	config.S3.SecretAccessKey = getenv("S3_SECRET_ACCESS_KEY", config.S3.SecretAccessKey)
 	config.S3.Bucket = getenv("S3_BUCKET", config.S3.Bucket)
 	config.S3.Region = getenv("S3_REGION", config.S3.Region)
 	config.S3.Endpoint = getenv("S3_ENDPOINT", config.S3.Endpoint)
+	config.S3.UsePathStyle = getenv("S3_USE_PATH_STYLE", fmt.Sprintf("%v", config.S3.UsePathStyle)) == "true"
+	config.S3.TLSInsecureSkipVerify = getenv("TLS_INSECURE_SKIP_VERIFY", fmt.Sprintf("%v", config.S3.TLSInsecureSkipVerify)) == "true"
+}
+
+func applyGithubOverrides(config *Config) {
+	config.Github.Token = getenv("GITHUB_TOKEN", config.Github.Token)
+	config.Github.Repository = getenv("GITHUB_REPOSITORY", config.Github.Repository)
+	config.Github.SyncInterval = getDuration("GITHUB_SYNC_INTERVAL", config.Github.SyncInterval)
+	config.Github.TLSInsecureSkipVerify = getenv("TLS_INSECURE_SKIP_VERIFY", fmt.Sprintf("%v", config.Github.TLSInsecureSkipVerify)) == "true"
+}
+
+func applyArtifactsOverrides(config *Config) {
 	config.ArtifactsPrefix = getenv("ARTIFACTS_PREFIX", config.ArtifactsPrefix)
 	config.ManifestsPrefix = getenv("MANIFESTS_PREFIX", config.ManifestsPrefix)
+}
+func applyEnvOverrides(config *Config) {
+	applyServerOverrides(config)
+	applyS3Overrides(config)
+	applyGithubOverrides(config)
+	applyArtifactsOverrides(config)
 }
 
 func getDuration(key string, fallback time.Duration) time.Duration {
