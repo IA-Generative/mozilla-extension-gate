@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 	"regexp"
 	"slices"
 	"strings"
@@ -25,33 +24,37 @@ var SpecialPaths = []string{MetricPath, ReadyPath, HealthPath}
 
 var safeTextRegex = regexp.MustCompile(`['";<>]`)
 
+var ignoredPaths []string
+
+func genrateIgnoredPaths(skipPaths []string, prefix string) {
+	ignoredPaths = []string{}
+	for _, path := range skipPaths {
+		ignoredPaths = append(ignoredPaths, prefix+path)
+	}
+}
+
 func sanitize(s string) string {
 	return strings.TrimSpace(safeTextRegex.ReplaceAllString(s, ""))
 }
 
-func WriteSpec(cfg *appconfig.Config, log *zap.Logger) {
-	router := chi.NewRouter()
-
-	if err := os.MkdirAll("docs", 0o750); err != nil {
-		log.Panic("failed to create docs directory", zap.Error(err))
-	}
-
-	f, err := os.Create("docs/openapi.json")
-	if err != nil {
-		log.Panic("failed to create spec file", zap.Error(err))
-	}
-	defer func() { _ = f.Close() }()
-
-	enc := json.NewEncoder(f)
-	enc.SetIndent("", "\t")
-	if err := enc.Encode(router); err != nil {
-		log.Panic("failed to encode spec", zap.Error(err))
+func LoggingMiddlewareWithSkip(skipPaths []string) func(next http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if slices.Contains(skipPaths, r.URL.Path) {
+				next.ServeHTTP(w, r)
+				return
+			}
+			chimiddleware.Logger(next).ServeHTTP(w, r)
+		})
 	}
 }
 
 func NewRouter(cfg *appconfig.Config, reconciler *repositorywatcher.RepositoryWatcher, logger *zap.Logger) http.Handler {
 	// Initialize the r with the cfg.Server.BasePath as the base path for all routes
+	genrateIgnoredPaths(SpecialPaths, cfg.Server.BasePath)
 	base_r := chi.NewRouter()
+	base_r.Use(LoggingMiddlewareWithSkip(ignoredPaths))
+
 	logger.Info("base path", zap.String("basePath", cfg.Server.BasePath))
 	base_r.Route(cfg.Server.BasePath, func(r chi.Router) {
 
@@ -66,7 +69,6 @@ func NewRouter(cfg *appconfig.Config, reconciler *repositorywatcher.RepositoryWa
 		r.Use(chimiddleware.RequestID)
 		r.Use(chimiddleware.RealIP)
 		r.Use(chimiddleware.Recoverer)
-		r.Use(chimiddleware.Logger)
 
 		r.Handle(MetricPath, chimMetrics.Handler())
 
