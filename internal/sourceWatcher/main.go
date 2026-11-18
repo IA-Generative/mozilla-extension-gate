@@ -29,10 +29,8 @@ func NewSourceWatcher(provider sources.SourceProvider, repository repositories.R
 	}
 }
 
-func (s *SourceWatcher) Start() error {
+func (s *SourceWatcher) Start() {
 	lib.RunPeriodically(s.config.Github.SyncInterval, s.Sync)
-	// Implement the logic to start watching the source provider for changes
-	return nil
 }
 
 func (s *SourceWatcher) Sync() error {
@@ -78,7 +76,10 @@ func (s *SourceWatcher) Sync() error {
 	s.logger.Info("Collected XPI assets", zap.Any("xpiAssetsNameList", xpiAssetsNameList))
 	hasChanged := s.ProcessXPIAssets(xpiAssetsList)
 	if hasChanged && s.manifestSvc != nil {
-		s.manifestSvc.Sync()
+		err := s.manifestSvc.Sync()
+		if err != nil {
+			s.logger.Error("Failed to sync manifest service", zap.Error(err))
+		}
 		s.logger.Info("XPI assets have changed")
 	}
 	s.logger.Info("Finished sync source watcher")

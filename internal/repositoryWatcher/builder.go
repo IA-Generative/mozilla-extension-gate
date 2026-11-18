@@ -48,7 +48,7 @@ func (s *RepositoryWatcher) BuildUpdateManifest() error {
 	}
 	var usedManifestKeys []string
 
-	var newUpdateManifest UpdateManifest = UpdateManifest{
+	newUpdateManifest := UpdateManifest{
 		Addons: make(map[string]struct {
 			Updates []UpdateElement `json:"updates"`
 		}),

@@ -29,10 +29,9 @@ func NewRepositoryWatcher(repo repositories.Repository, logger *zap.Logger, conf
 	}
 }
 
-func (s *RepositoryWatcher) Start() error {
+func (s *RepositoryWatcher) Start() {
 	s.logger.Info("Starting watcher repository")
 	lib.RunPeriodically(s.config.Github.SyncInterval, s.Sync)
-	return nil
 }
 
 func (s *RepositoryWatcher) Sync() error {

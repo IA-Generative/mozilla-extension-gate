@@ -16,11 +16,17 @@ func NewFileProvider(cfg appconfig.Config) *FileProvider {
 	artifactsPath := path.Join(cfg.FileStorage.Path, cfg.ArtifactsPrefix)
 
 	if _, err := os.Stat(artifactsPath); os.IsNotExist(err) {
-		os.MkdirAll(artifactsPath, 0755)
+		err := os.MkdirAll(artifactsPath, 0755)
+		if err != nil {
+			panic(fmt.Sprintf("Failed to create artifacts directory: %v", err))
+		}
 	}
 	// create the manifests directory if it doesn't exist
 	if _, err := os.Stat(manifestsPath); os.IsNotExist(err) {
-		os.MkdirAll(manifestsPath, 0755)
+		err := os.MkdirAll(manifestsPath, 0755)
+		if err != nil {
+			panic(fmt.Sprintf("Failed to create manifests directory: %v", err))
+		}
 	}
 	return &FileProvider{
 		path:          cfg.FileStorage.Path,
