@@ -108,11 +108,15 @@ func (p *GithubProvider) ListReleaseAssets(release lib.Release) ([]lib.ReleaseAs
 
 	var assets []GithubReleaseAsset
 	err = json.NewDecoder(resp.Body).Decode(&assets)
-	resp.Body.Close()
-
+	
 	if err != nil {
 		p.logger.Error("Failed to decode GitHub release assets", zap.Error(err))
 		return nil, err
+	}
+
+	err = resp.Body.Close()
+	if err != nil {
+		p.logger.Error("Failed to close response body", zap.Error(err))
 	}
 
 	return convertGithubReleaseAssetsToLibReleaseAssets(assets), nil
@@ -150,7 +154,10 @@ func (p *GithubProvider) FetchReleaseAsset(asset lib.ReleaseAsset) ([]byte, erro
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		resp.Body.Close()
+		err := resp.Body.Close()
+		if err != nil {
+			p.logger.Error("Failed to close response body", zap.Error(err))
+		}
 		return nil, fmt.Errorf(
 			"GitHub API returned status %d",
 			resp.StatusCode,
