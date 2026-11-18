@@ -9,5 +9,7 @@ spec:
   resources:
     requests:
       storage: 1Gi
-  storageClassName: {{ .Values.config.fileStorage.storageClassName | default "" }}
+  {{- with .Values.config.fileStorage.storageClassName }}
+  storageClassName: {{ . | default "" }}
+  {{- end }}
 {{- end }}
