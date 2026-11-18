@@ -105,7 +105,11 @@ func (p *S3Provider) Download(ctx context.Context, key string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer output.Body.Close()
+	defer func() {
+		if err := output.Body.Close(); err != nil {
+			p.logger.Error("failed to close S3 response body", zap.Error(err))
+		}
+	}()
 
 	buf := new(bytes.Buffer)
 	_, err = buf.ReadFrom(output.Body)

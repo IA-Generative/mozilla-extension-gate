@@ -58,7 +58,7 @@ func ExtractManifestFromArchive(data []byte) (*Manifest, error) {
 			return nil, err
 		}
 
-		fileInArchive.Close()
+		_ = fileInArchive.Close()
 		return &manifest, nil
 	}
 	return nil, os.ErrNotExist

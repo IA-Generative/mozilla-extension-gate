@@ -42,7 +42,10 @@ func (p *GithubProvider) ListReleases() ([]lib.Release, error) {
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		resp.Body.Close()
+		err := resp.Body.Close()
+		if err != nil {
+			p.logger.Error("Failed to close response body", zap.Error(err))
+		}
 		return nil, fmt.Errorf(
 			"GitHub API returned status %d",
 			resp.StatusCode,
@@ -51,11 +54,14 @@ func (p *GithubProvider) ListReleases() ([]lib.Release, error) {
 
 	var releases []GithubRelease
 	err = json.NewDecoder(resp.Body).Decode(&releases)
-	resp.Body.Close()
-
+	
 	if err != nil {
 		p.logger.Error("Failed to decode GitHub releases", zap.Error(err))
 		return nil, err
+	}
+	err = resp.Body.Close()
+	if err != nil {
+		p.logger.Error("Failed to close response body", zap.Error(err))
 	}
 
 	return convertGithubReleasesToLibReleases(releases), nil
@@ -90,7 +96,10 @@ func (p *GithubProvider) ListReleaseAssets(release lib.Release) ([]lib.ReleaseAs
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		resp.Body.Close()
+		err := resp.Body.Close()
+		if err != nil {
+			p.logger.Error("Failed to close response body", zap.Error(err))
+		}
 		return nil, fmt.Errorf(
 			"GitHub API returned status %d",
 			resp.StatusCode,

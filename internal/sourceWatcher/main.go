@@ -108,7 +108,10 @@ func (s *SourceWatcher) ProcessXPIAssets(xpiAssets []sourceProviderLib.ReleaseAs
 		}
 		if !exists {
 			s.logger.Info("Asset not found in repository", zap.String("asset", asset.Name))
-			s.SynchronizeAssetToRepository(asset, key)
+			err := s.SynchronizeAssetToRepository(asset, key)
+			if err != nil {
+				s.logger.Error("Failed to synchronize asset to repository", zap.String("asset", asset.Name), zap.Error(err))
+			}
 			anyChanges = true
 			continue
 		}
@@ -119,7 +122,10 @@ func (s *SourceWatcher) ProcessXPIAssets(xpiAssets []sourceProviderLib.ReleaseAs
 		}
 		if *storedLength != asset.Size {
 			s.logger.Info("Asset size mismatch, updating repository", zap.String("asset", asset.Name))
-			s.SynchronizeAssetToRepository(asset, key)
+			err := s.SynchronizeAssetToRepository(asset, key)
+			if err != nil {
+				s.logger.Error("Failed to synchronize asset to repository", zap.String("asset", asset.Name), zap.Error(err))
+			}
 			anyChanges = true
 		}
 	}
