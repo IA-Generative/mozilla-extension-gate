@@ -41,11 +41,12 @@ type Client struct {
 	token      string
 }
 
-func NewClient(token string, tlsInsecureSkipVerify bool) *Client {
+func NewClient(config *config.GithubConfig) *Client {
 	transport := http.DefaultTransport
-	if tlsInsecureSkipVerify {
+	if config.TLSInsecureSkipVerify {
 		transport = &http.Transport{
 			TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, //nolint:gosec
+			Proxy: http.ProxyFromEnvironment,
 		}
 	}
 	return &Client{
@@ -53,7 +54,7 @@ func NewClient(token string, tlsInsecureSkipVerify bool) *Client {
 			Timeout:   15 * time.Second,
 			Transport: transport,
 		},
-		token: token,
+		token: config.Token,
 	}
 }
 
@@ -73,7 +74,7 @@ func NewGithubProvider(config *config.GithubConfig, logger *zap.Logger) (*Github
 	}
 	return &GithubProvider{
 		config: config,
-		client: NewClient(config.Token, config.TLSInsecureSkipVerify),
+		client: NewClient(config),
 		logger: logger,
 	}, nil
 }
