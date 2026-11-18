@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.4.0](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.3.0...v1.4.0) (2026-11-18)
+
+
+### Features
+
+* add CreateBucketIfNotExists option to S3 configuration and implement bucket creation logic ([b2964e8](https://github.com/IA-Generative/mozilla-extension-gate/commit/b2964e8a26e6979b1c4948e9cff7fd9a6bbe82b4))
+* implement file storage provider and update configuration for file-based storage ([cbc70e3](https://github.com/IA-Generative/mozilla-extension-gate/commit/cbc70e37e0ecf306dc1a4f1428e9c2d74d3c92d8))
+
+
+### Bug Fixes
+
+* reorganize middleware and path handling in API router ([717fede](https://github.com/IA-Generative/mozilla-extension-gate/commit/717fedea8e75a15d412abb45d228d12d456da80d))
+* update init container to use dynamic image and simplify CA certificate handling ([3cd0807](https://github.com/IA-Generative/mozilla-extension-gate/commit/3cd0807d72221d71b5047bb6021bd2d178d417a1))
+* update URL assignment for release assets in conversion function ([d50b20d](https://github.com/IA-Generative/mozilla-extension-gate/commit/d50b20d685de9aa0538f649bad7be70d079459d0))
+
 ## [1.3.0](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.2.0...v1.3.0) (2026-11-18)
 
 
