@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"path"
 
 	appconfig "github.com/IA-Generative/mozilla-extension-gate/internal/config"
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -66,7 +67,20 @@ func NewS3Provider(config appconfig.S3Config, logger *zap.Logger) (*S3Provider, 
 			o.UsePathStyle = config.UsePathStyle
 		}
 	})
-
+	if config.CreateBucketIfNotExists {
+		// Create the bucket if not exists
+		_, err = client.HeadBucket(ctx, &s3.HeadBucketInput{
+			Bucket: &config.Bucket,
+		})
+		if err != nil {
+			_, err = client.CreateBucket(ctx, &s3.CreateBucketInput{
+				Bucket: &config.Bucket,
+			})
+			if err != nil {
+				return nil, fmt.Errorf("creating S3 bucket: %w", err)
+			}
+		}
+	}
 	return &S3Provider{
 		client: client,
 		bucket: config.Bucket,

@@ -24,13 +24,14 @@ type GithubConfig struct {
 }
 
 type S3Config struct {
-	AccessKeyID          string
-	SecretAccessKey      string
-	Bucket               string
-	Region               string
-	Endpoint             string
-	UsePathStyle         bool
-	TLSInsecureSkipVerify bool
+	AccessKeyID             string
+	SecretAccessKey         string
+	Bucket                  string
+	Region                  string
+	Endpoint                string
+	UsePathStyle            bool
+	TLSInsecureSkipVerify   bool
+	CreateBucketIfNotExists bool
 }
 
 type FileStorageConfig struct {
@@ -69,8 +70,9 @@ func defaultConfig() *Config {
 			Token:        "",
 		},
 		S3: S3Config{
-			Region: "us-east-1",
+			Region:       "us-east-1",
 			UsePathStyle: true,
+			CreateBucketIfNotExists: false,
 		},
 		ArtifactsPrefix: "artifacts",
 		ManifestsPrefix: "manifests",
@@ -102,6 +104,7 @@ func applyS3Overrides(config *Config) {
 	config.S3.Endpoint = getenv("S3_ENDPOINT", config.S3.Endpoint)
 	config.S3.UsePathStyle = getenv("S3_USE_PATH_STYLE", fmt.Sprintf("%v", config.S3.UsePathStyle)) == "true"
 	config.S3.TLSInsecureSkipVerify = getenv("TLS_INSECURE_SKIP_VERIFY", fmt.Sprintf("%v", config.S3.TLSInsecureSkipVerify)) == "true"
+	config.S3.CreateBucketIfNotExists = getenv("S3_CREATE_BUCKET_IF_NOT_EXISTS", fmt.Sprintf("%v", config.S3.CreateBucketIfNotExists)) == "true"
 }
 
 func applyGithubOverrides(config *Config) {
