@@ -55,7 +55,6 @@ func NewRouter(cfg *appconfig.Config, reconciler *repositorywatcher.RepositoryWa
 	base_r := chi.NewRouter()
 	base_r.Use(LoggingMiddlewareWithSkip(ignoredPaths))
 
-	logger.Info("base path", zap.String("basePath", cfg.Server.BasePath))
 	base_r.Route(cfg.Server.BasePath, func(r chi.Router) {
 
 		r.Use(chimMetrics.Collector(chimMetrics.CollectorOpts{

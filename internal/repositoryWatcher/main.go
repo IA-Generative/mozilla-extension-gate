@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"path"
 	"path/filepath"
 	"slices"
 
@@ -35,12 +36,13 @@ func (s *RepositoryWatcher) Start() error {
 }
 
 func (s *RepositoryWatcher) Sync() error {
+	s.logger.Info("Starting sync repository watcher")
+
 	artifacts, err := s.ListArtifacts()
 	if err != nil {
 		s.logger.Error("Failed to list artifacts", zap.Error(err))
 		return err
 	}
-	s.logger.Info("Retrieved artifacts", zap.Any("artifacts", artifacts))
 	manifests, err := s.ListManifests()
 	if err != nil {
 		s.logger.Error("Failed to list manifests", zap.Error(err))
@@ -74,7 +76,7 @@ func (s *RepositoryWatcher) Sync() error {
 		s.logger.Error("Failed to build update manifest", zap.Error(err))
 		return err
 	}
-	s.logger.Info("Built update manifest")
+	s.logger.Info("Finished sync repository watcher")
 
 	return nil
 }
@@ -83,7 +85,6 @@ func (s *RepositoryWatcher) ListManifests() ([]string, error) {
 	ctx := context.Background()
 	manifests, err := s.Repo.List(ctx, s.config.ManifestsPrefix)
 	if err != nil {
-		s.logger.Error("Failed to list manifests", zap.Error(err))
 		return nil, err
 	}
 	return manifests, nil
@@ -91,7 +92,6 @@ func (s *RepositoryWatcher) ListManifests() ([]string, error) {
 
 func (s *RepositoryWatcher) ListArtifacts() ([]string, error) {
 	ctx := context.Background()
-	s.logger.Info("Listing artifacts", zap.String("prefix", s.config.ArtifactsPrefix))
 	artifacts, err := s.Repo.List(ctx, s.config.ArtifactsPrefix)
 	if err != nil {
 		return nil, err
@@ -123,11 +123,13 @@ func (s *RepositoryWatcher) CreateArtifactManifest(artifact string) error {
 		s.logger.Error("Failed to download artifact", zap.String("artifact", artifact), zap.Error(err))
 		return err
 	}
+
 	xpiManifest, err := xpi.ExtractManifestFromArchive(artifactData)
 	if err != nil {
 		s.logger.Error("Failed to extract manifest from artifact", zap.Error(err))
 		return err
 	}
+
 	manifestKey := repositories.BuildKey(s.config.ManifestsPrefix, artifactBase+".manifest.json")
 	jsonData, err := json.Marshal(xpiManifest)
 	err = s.Repo.Upload(ctx, manifestKey, jsonData)

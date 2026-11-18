@@ -82,7 +82,6 @@ func (s *RepositoryWatcher) BuildUpdateManifest() error {
 		if addonId == "" {
 			continue
 		}
-		addonId = fmt.Sprintf("{%s}", addonId)
 		entry, ok := newUpdateManifest.Addons[addonId]
 		if !ok {
 			newUpdateManifest.Addons[addonId] = struct {

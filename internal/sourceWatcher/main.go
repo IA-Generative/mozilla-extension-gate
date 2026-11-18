@@ -36,7 +36,7 @@ func (s *SourceWatcher) Start() error {
 }
 
 func (s *SourceWatcher) Sync() error {
-	s.logger.Info("Starting sync operation")
+	s.logger.Info("Starting sync source watcher")
 	releases, err := s.provider.ListReleases()
 	if err != nil {
 		s.logger.Error("Failed to list releases", zap.Error(err))
@@ -63,7 +63,6 @@ func (s *SourceWatcher) Sync() error {
 			continue
 		}
 		xpiAssets := filterAssets(*release.Assets, func(asset sourceProviderLib.ReleaseAsset) bool {
-			s.logger.Info("Processing asset", zap.Any("asset", asset))
 			return asset.ContentType == "application/x-xpinstall"
 		})
 		if len(xpiAssets) == 0 {
@@ -72,12 +71,17 @@ func (s *SourceWatcher) Sync() error {
 		}
 		xpiAssetsList = append(xpiAssetsList, xpiAssets...)
 	}
-	s.logger.Info("Collected XPI assets", zap.Any("xpiAssets", xpiAssetsList))
+	xpiAssetsNameList := []string{}
+	for _, asset := range xpiAssetsList {
+		xpiAssetsNameList = append(xpiAssetsNameList, asset.Name)
+	}
+	s.logger.Info("Collected XPI assets", zap.Any("xpiAssetsNameList", xpiAssetsNameList))
 	hasChanged := s.ProcessXPIAssets(xpiAssetsList)
 	if hasChanged && s.manifestSvc != nil {
 		s.manifestSvc.Sync()
 		s.logger.Info("XPI assets have changed")
 	}
+	s.logger.Info("Finished sync source watcher")
 	return nil
 }
 
@@ -112,8 +116,8 @@ func (s *SourceWatcher) ProcessXPIAssets(xpiAssets []sourceProviderLib.ReleaseAs
 			s.logger.Error("Failed to get file length", zap.Error(err))
 			continue
 		}
-		s.logger.Info("Stored length for asset", zap.String("asset", asset.Name), zap.Int64("length", *storedLength))
 		if *storedLength != asset.Size {
+			s.logger.Info("Asset size mismatch, updating repository", zap.String("asset", asset.Name))
 			s.SynchronizeAssetToRepository(asset, key)
 			anyChanges = true
 		}

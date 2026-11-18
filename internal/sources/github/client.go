@@ -62,7 +62,7 @@ func (p *GithubProvider) ListReleases() ([]lib.Release, error) {
 
 func (p *GithubProvider) ListReleaseAssets(release lib.Release) ([]lib.ReleaseAsset, error) {
 	endpoint := release.AssetsURL
-	p.logger.Info("Fetching releases from GitHub endpoint", zap.String("endpoint", endpoint))
+	p.logger.Info("Fetching releases assets from GitHub endpoint", zap.String("endpoint", endpoint))
 
 	req, err := http.NewRequest(
 		http.MethodGet,
