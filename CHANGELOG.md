@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.4.0...v1.4.1) (2026-11-18)
+
+
+### Bug Fixes
+
+* correct indentation for storageClassName in PVC configuration ([3715f5b](https://github.com/IA-Generative/mozilla-extension-gate/commit/3715f5bae9bd1786c19a45f066c8e374f78beb0c))
+
 ## [1.4.0](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.3.0...v1.4.0) (2026-11-18)
 
 
