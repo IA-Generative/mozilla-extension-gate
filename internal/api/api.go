@@ -3,9 +3,7 @@ package api
 import (
 	"encoding/json"
 	"net/http"
-	"regexp"
 	"slices"
-	"strings"
 
 	"github.com/go-chi/chi"
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
@@ -22,8 +20,6 @@ const HealthPath = "/healthz"
 
 var SpecialPaths = []string{MetricPath, ReadyPath, HealthPath}
 
-var safeTextRegex = regexp.MustCompile(`['";<>]`)
-
 var ignoredPaths []string
 
 func genrateIgnoredPaths(skipPaths []string, prefix string) {
@@ -31,10 +27,6 @@ func genrateIgnoredPaths(skipPaths []string, prefix string) {
 	for _, path := range skipPaths {
 		ignoredPaths = append(ignoredPaths, prefix+path)
 	}
-}
-
-func sanitize(s string) string {
-	return strings.TrimSpace(safeTextRegex.ReplaceAllString(s, ""))
 }
 
 func LoggingMiddlewareWithSkip(skipPaths []string) func(next http.Handler) http.Handler {

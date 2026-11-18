@@ -132,6 +132,10 @@ func (s *RepositoryWatcher) CreateArtifactManifest(artifact string) error {
 
 	manifestKey := repositories.BuildKey(s.config.ManifestsPrefix, artifactBase+".manifest.json")
 	jsonData, err := json.Marshal(xpiManifest)
+	if err != nil {
+		s.logger.Error("Failed to marshal manifest to JSON", zap.String("artifact", artifactBase), zap.Error(err))
+		return err
+	}
 	err = s.Repo.Upload(ctx, manifestKey, jsonData)
 	if err != nil {
 		s.logger.Error("Failed to create artifact manifest", zap.String("artifact", artifactBase), zap.Error(err))
