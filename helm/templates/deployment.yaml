@@ -31,15 +31,11 @@ spec:
       {{- if .Values.extraCAs }}
       initContainers:
       - name: ca-certs-injector
-        image: alpine:3.18
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
         command:
         - /bin/sh
         - -c
-        - |
-          apk add --no-cache ca-certificates && \
-          cp /extra-cas/* /usr/local/share/ca-certificates/ && \
-          update-ca-certificates && \
-          cp /etc/ssl/certs/ca-certificates.crt /ssl-certs/ca-certificates.crt
+        - cat /etc/ssl/certs/ca-certificates.crt /extra-cas/* > /ssl-certs/ca-certificates.crt
 
         resources:
           {{- toYaml .Values.initContainer.resources | nindent 12 }}
