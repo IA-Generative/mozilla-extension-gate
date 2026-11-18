@@ -1,6 +1,6 @@
 # mozilla-extension-gate
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.3.0](https://img.shields.io/badge/AppVersion-1.3.0-informational?style=flat-square)
+![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.4.0](https://img.shields.io/badge/AppVersion-1.4.0-informational?style=flat-square)
 
 A Helm chart for mozilla-extension-gate application
 
@@ -39,6 +39,8 @@ A Helm chart for mozilla-extension-gate application
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | config.artifactsPrefix | string | `"artifacts"` |  |
+| config.fileStorage.path | string | `"/addons"` |  |
+| config.fileStorage.storageClassName | string | `""` |  |
 | config.github.repository | string | `""` |  |
 | config.github.syncInterval | string | `"5m"` |  |
 | config.manifestsPrefix | string | `"manifests"` |  |
@@ -55,6 +57,7 @@ A Helm chart for mozilla-extension-gate application
 | config.server.proxyArtifactEnabled | bool | `false` |  |
 | config.server.publicUrl | string | `"http://localhost:8080"` |  |
 | config.server.version | string | `"1.0"` |  |
+| config.storageType | string | `"file"` |  |
 | config.tls.insecureSkipVerify | bool | `false` |  |
 | env | list | `[]` |  |
 | extraCAs | object | `{}` |  |
