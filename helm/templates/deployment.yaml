@@ -28,6 +28,28 @@ spec:
       serviceAccountName: {{ include "mozilla-extension-gate.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.extraCAs }}
+      initContainers:
+      - name: ca-certs-injector
+        image: alpine:3.18
+        command:
+        - /bin/sh
+        - -c
+        - |
+          apk add --no-cache ca-certificates && \
+          cp /extra-cas/* /usr/local/share/ca-certificates/ && \
+          update-ca-certificates && \
+          cp /etc/ssl/certs/ca-certificates.crt /ssl-certs/ca-certificates.crt
+
+        resources:
+          {{- toYaml .Values.initContainer.resources | nindent 12 }}
+
+        volumeMounts:
+        - name: extra-cas
+          mountPath: /extra-cas
+        - name: ssl-certs
+          mountPath: /ssl-certs
+      {{- end }}
       containers:
       - name: {{ .Chart.Name }}
         securityContext:
@@ -57,6 +79,25 @@ spec:
         - name: S3_SECRET_ACCESS_KEY
           {{- . | toYaml | nindent 10 }}
         {{- end }}
+        # Proxy settings
+        {{- with .Values.proxy.httpProxy }}
+        - name: HTTP_PROXY
+          value: {{ . | quote }}
+        - name: http_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.proxy.httpsProxy }}
+        - name: HTTPS_PROXY
+          value: {{ . | quote }}
+        - name: https_proxy
+          value: {{ . | quote }}
+        {{- end }}
+        {{- with .Values.proxy.noProxy }}
+        - name: NO_PROXY
+          value: {{ . | quote }}
+        - name: no_proxy
+          value: {{ . | quote }}
+        {{- end }}
         # Additional custom environment variables
         {{- with .Values.env }}
         {{- toYaml . | nindent 8 }}
@@ -79,14 +120,30 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
 
-        {{- with .Values.volumeMounts }}
+        {{- if or .Values.volumeMounts .Values.extraCAs }}
         volumeMounts:
-          {{- toYaml . | nindent 12 }}
+          {{- with .Values.volumeMounts }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- if .Values.extraCAs }}
+          - name: ssl-certs
+            mountPath: /etc/ssl/certs
+            readOnly: true
+          {{- end }}
         {{- end }}
 
-      {{- with .Values.volumes }}
+      {{- if or .Values.volumes .Values.extraCAs }}
       volumes:
+        {{- with .Values.volumes }}
         {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.extraCAs }}
+        - name: extra-cas
+          configMap:
+            name: {{ include "mozilla-extension-gate.fullname" . }}-extra-cas
+        - name: ssl-certs
+          emptyDir: {}
+        {{- end }}
       {{- end }}
 
       {{- with .Values.nodeSelector }}

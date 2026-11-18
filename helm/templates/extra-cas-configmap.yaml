@@ -1,0 +1,13 @@
+{{- if .Values.extraCAs }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mozilla-extension-gate.fullname" . }}-extra-cas
+  labels:
+    {{- include "mozilla-extension-gate.labels" . | nindent 4 }}
+data:
+  {{- range $name, $cert := .Values.extraCAs }}
+  {{ $name }}: |
+    {{- $cert | nindent 4 }}
+  {{- end }}
+{{- end }}
