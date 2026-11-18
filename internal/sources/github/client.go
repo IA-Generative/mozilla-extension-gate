@@ -169,7 +169,7 @@ func convertGithubReleaseAssetsToLibReleaseAssets(assets []GithubReleaseAsset) [
 		libAssets[i] = lib.ReleaseAsset{
 			ID:          fmt.Sprintf("%d", a.ID),
 			Name:        a.Name,
-			URL:         a.BrowserDownloadURL,
+			URL:         a.URL,
 			ContentType: a.ContentType,
 			Size:        a.Size,
 		}
