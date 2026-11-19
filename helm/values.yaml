@@ -97,6 +97,9 @@ config:
 
   storageType: "file"
 
+  # Alias Configuration
+  extensionAlias: ""
+
   # Path prefixes
   artifactsPrefix: "artifacts"
   manifestsPrefix: "manifests"
