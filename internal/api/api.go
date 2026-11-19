@@ -2,8 +2,11 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"path"
 	"slices"
+	"strings"
 
 	"github.com/go-chi/chi"
 	chimiddleware "github.com/go-chi/chi/v5/middleware"
@@ -109,6 +112,33 @@ func NewRouter(cfg *appconfig.Config, reconciler *repositorywatcher.RepositoryWa
 				_, _ = w.Write(data)
 			})
 		}
+
+		extensionAliasMap := make(map[string]string)
+		if cfg.Server.ExtensionAlias != "" {
+			aliases := strings.Split(cfg.Server.ExtensionAlias, ",")
+			for _, alias := range aliases {
+				parts := strings.Split(alias, ":")
+				if len(parts) == 2 {
+					extensionAliasMap[parts[0]] = parts[1]
+				}
+			}
+		}
+		r.Get("/{alias}/latest", func(w http.ResponseWriter, r *http.Request) {
+			alias := chi.URLParam(r, "alias")
+			geckoID, ok := extensionAliasMap[alias]
+			if !ok {
+				http.Error(w, "alias not found", http.StatusNotFound)
+				return
+			}
+			data, err := reconciler.GetLatestArtifact(geckoID)
+			if err != nil {
+				http.Error(w, "failed to download artifact", http.StatusInternalServerError)
+				return
+			}
+			w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", path.Base(chi.URLParam(r, "alias")+".xpi")))
+			w.Header().Set("Content-Type", "application/x-xpinstall")
+			_, _ = w.Write(data)
+		})
 	})
 
 	transport := chimMetrics.Transport(chimMetrics.TransportOpts{Host: true})

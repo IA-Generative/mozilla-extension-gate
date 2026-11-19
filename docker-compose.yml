@@ -16,6 +16,8 @@ services:
       # S3_ENDPOINT: http://rustfs:9000
       # Uncomment the following lines to enable file storage
       FILE_STORAGE_PATH: /addons
+      # aliasing extension, comma separated entries, alias:geckoID
+      EXTENSION_ALIAS: "selfim-extension:firefox-extension-starter@example.com"
       GITHUB_TOKEN: ""
       GITHUB_REPOSITORY: ArnaudTA/gubexplorer
       ARTIFACT_BASE_URL: http://localhost:9001/test/artifacts/

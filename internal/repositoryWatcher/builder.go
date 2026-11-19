@@ -26,10 +26,12 @@ type UpdateElement struct {
 	UpdateHash   *string      `json:"update_hash,omitempty"`
 	Applications *Application `json:"applications,omitempty"`
 }
+
+type UpdateList struct {
+	Updates []UpdateElement `json:"updates"`
+}
 type UpdateManifest struct {
-	Addons map[string]struct {
-		Updates []UpdateElement `json:"updates"`
-	} `json:"addons"`
+	Addons map[string]UpdateList `json:"addons"`
 	Etag *string `json:"-"`
 }
 
@@ -49,9 +51,7 @@ func (s *RepositoryWatcher) BuildUpdateManifest() error {
 	var usedManifestKeys []string
 
 	newUpdateManifest := UpdateManifest{
-		Addons: make(map[string]struct {
-			Updates []UpdateElement `json:"updates"`
-		}),
+		Addons: make(map[string]UpdateList),
 	}
 	// var manifests []xpi.Manifest
 	for _, key := range manifestsKeys {
@@ -84,9 +84,7 @@ func (s *RepositoryWatcher) BuildUpdateManifest() error {
 		}
 		entry, ok := newUpdateManifest.Addons[addonId]
 		if !ok {
-			newUpdateManifest.Addons[addonId] = struct {
-				Updates []UpdateElement `json:"updates"`
-			}{}
+			newUpdateManifest.Addons[addonId] = UpdateList{}
 			entry = newUpdateManifest.Addons[addonId]
 		}
 		// remove the .manifest.json from key

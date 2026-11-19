@@ -7,6 +7,7 @@ import (
 	"path"
 	"path/filepath"
 	"slices"
+	"strings"
 
 	"github.com/IA-Generative/mozilla-extension-gate/internal/config"
 	"github.com/IA-Generative/mozilla-extension-gate/internal/lib"
@@ -153,4 +154,58 @@ func (s *RepositoryWatcher) GetArtifact(artifact string) ([]byte, error) {
 		return nil, err
 	}
 	return data, nil
+}
+
+func (s *RepositoryWatcher) GetLatestArtifact(extensionID string) ([]byte, error) {
+	ctx := context.Background()
+	manifest := s.GetUpdateManifest()
+	if manifest == nil {
+		return nil, fmt.Errorf("update manifest not found")
+	}
+	latestArtifact, ok := manifest.Addons[extensionID]
+	if !ok || len(latestArtifact.Updates) == 0 {
+		return nil, fmt.Errorf("no artifact found for extension ID: %s", extensionID)
+	}
+	highestVersion, err := s.determineHigherVersion(latestArtifact)
+	if err != nil {
+		return nil, err
+	}
+	key := path.Join(s.config.ArtifactsPrefix, path.Base(highestVersion.UpdateLink))
+	data, err := s.Repo.Download(ctx, key)
+	if err != nil {
+		s.logger.Error("Failed to download artifact", zap.String("artifact", key), zap.Error(err))
+		return nil, err
+	}
+	return data, nil
+}
+
+func (s *RepositoryWatcher) determineHigherVersion(updateList UpdateList) (UpdateElement, error) {
+	if len(updateList.Updates) == 0 {
+		return UpdateElement{}, fmt.Errorf("update list is empty")
+	}
+	highest := updateList.Updates[0]
+	for _, update := range updateList.Updates[1:] {
+		if compareVersions(update.Version, highest.Version) > 0 {
+			highest = update
+		}
+	}
+	return highest, nil
+}
+
+func compareVersions(v1, v2 string) int {
+	parts1 := strings.Split(v1, ".")
+	parts2 := strings.Split(v2, ".")
+	for i := 0; i < len(parts1) && i < len(parts2); i++ {
+		if parts1[i] > parts2[i] {
+			return 1
+		} else if parts1[i] < parts2[i] {
+			return -1
+		}
+	}
+	if len(parts1) > len(parts2) {
+		return 1
+	} else if len(parts1) < len(parts2) {
+		return -1
+	}
+	return 0
 }

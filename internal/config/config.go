@@ -47,6 +47,7 @@ type ServerConfig struct {
 	InstanceID           string
 	ArtifactBaseUrl      string
 	ProxyArtifactEnabled bool
+	ExtensionAlias       string
 }
 
 func Load() (*Config, error) {
@@ -64,14 +65,15 @@ func defaultConfig() *Config {
 			PublicURL:  "http://localhost:8080",
 			BasePath:   "/",
 			InstanceID: "UNKNOWN",
+			ExtensionAlias: "",
 		},
 		Github: GithubConfig{
 			SyncInterval: 5 * time.Minute,
 			Token:        "",
 		},
 		S3: S3Config{
-			Region:       "us-east-1",
-			UsePathStyle: true,
+			Region:                  "us-east-1",
+			UsePathStyle:            true,
 			CreateBucketIfNotExists: false,
 		},
 		ArtifactsPrefix: "artifacts",
@@ -85,6 +87,7 @@ func applyServerOverrides(config *Config) {
 	config.Server.PublicURL = getenv("PUBLIC_URL", config.Server.PublicURL)
 	config.Server.BasePath = getenv("BASE_PATH", config.Server.BasePath)
 	config.Server.Version = getenv("APP_VERSION", config.Server.Version)
+	config.Server.ExtensionAlias = getenv("EXTENSION_ALIAS", config.Server.ExtensionAlias)
 	config.Server.InstanceID = getenv("INSTANCE_ID", func() string {
 		config.Server.ArtifactBaseUrl = getenv("ARTIFACT_BASE_URL", config.Server.ArtifactBaseUrl)
 		config.Server.ProxyArtifactEnabled = getenv("PROXY_ARTIFACT_ENABLED", fmt.Sprintf("%v", config.Server.ProxyArtifactEnabled)) == "true"
