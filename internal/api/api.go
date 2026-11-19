@@ -130,12 +130,12 @@ func NewRouter(cfg *appconfig.Config, reconciler *repositorywatcher.RepositoryWa
 				http.Error(w, "alias not found", http.StatusNotFound)
 				return
 			}
-			data, err := reconciler.GetLatestArtifact(geckoID)
+			data, version,  err := reconciler.GetLatestArtifact(geckoID)
 			if err != nil {
 				http.Error(w, "failed to download artifact", http.StatusInternalServerError)
 				return
 			}
-			w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", path.Base(chi.URLParam(r, "alias")+".xpi")))
+			w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s", path.Base(chi.URLParam(r, "alias")+"-"+version+".xpi")))
 			w.Header().Set("Content-Type", "application/x-xpinstall")
 			_, _ = w.Write(data)
 		})

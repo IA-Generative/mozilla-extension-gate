@@ -156,27 +156,27 @@ func (s *RepositoryWatcher) GetArtifact(artifact string) ([]byte, error) {
 	return data, nil
 }
 
-func (s *RepositoryWatcher) GetLatestArtifact(extensionID string) ([]byte, error) {
+func (s *RepositoryWatcher) GetLatestArtifact(extensionID string) ([]byte, string, error) {
 	ctx := context.Background()
 	manifest := s.GetUpdateManifest()
 	if manifest == nil {
-		return nil, fmt.Errorf("update manifest not found")
+		return nil, "", fmt.Errorf("update manifest not found")
 	}
 	latestArtifact, ok := manifest.Addons[extensionID]
 	if !ok || len(latestArtifact.Updates) == 0 {
-		return nil, fmt.Errorf("no artifact found for extension ID: %s", extensionID)
+		return nil, "", fmt.Errorf("no artifact found for extension ID: %s", extensionID)
 	}
 	highestVersion, err := s.determineHigherVersion(latestArtifact)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
 	key := path.Join(s.config.ArtifactsPrefix, path.Base(highestVersion.UpdateLink))
 	data, err := s.Repo.Download(ctx, key)
 	if err != nil {
 		s.logger.Error("Failed to download artifact", zap.String("artifact", key), zap.Error(err))
-		return nil, err
+		return nil, "", err
 	}
-	return data, nil
+	return data, highestVersion.Version, nil
 }
 
 func (s *RepositoryWatcher) determineHigherVersion(updateList UpdateList) (UpdateElement, error) {
