@@ -36,6 +36,12 @@ ingress:
           pathType: Prefix
   tls: []
 
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 1
+
 resources:
   limits:
     cpu: 500m

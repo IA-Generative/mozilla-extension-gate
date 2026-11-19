@@ -11,6 +11,13 @@ spec:
   selector:
     matchLabels:
       {{- include "mozilla-extension-gate.selectorLabels" . | nindent 6 }}
+  {{- with .Values.strategy }}
+  strategy:
+    type: {{ .type | default "RollingUpdate" }}
+    rollingUpdate:
+      maxUnavailable: {{ .rollingUpdate.maxUnavailable | default 1 }}
+      maxSurge: {{ .rollingUpdate.maxSurge | default 1 }}
+  {{- end -}}
   template:
     metadata:
       annotations:
