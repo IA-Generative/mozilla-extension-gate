@@ -1,6 +1,6 @@
 # mozilla-extension-gate
 
-![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.0](https://img.shields.io/badge/AppVersion-1.5.0-informational?style=flat-square)
+![Version: 0.1.7](https://img.shields.io/badge/Version-0.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.5.1](https://img.shields.io/badge/AppVersion-1.5.1-informational?style=flat-square)
 
 A Helm chart for mozilla-extension-gate application
 
@@ -39,6 +39,7 @@ A Helm chart for mozilla-extension-gate application
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | config.artifactsPrefix | string | `"artifacts"` |  |
+| config.extensionAlias | string | `""` |  |
 | config.fileStorage.path | string | `"/addons"` |  |
 | config.fileStorage.storageClassName | string | `""` |  |
 | config.github.repository | string | `""` |  |
@@ -98,6 +99,9 @@ A Helm chart for mozilla-extension-gate application
 | serviceAccount.annotations | object | `{}` |  |
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` |  |
+| strategy.rollingUpdate.maxSurge | int | `1` |  |
+| strategy.rollingUpdate.maxUnavailable | int | `1` |  |
+| strategy.type | string | `"RollingUpdate"` |  |
 | tolerations | list | `[]` |  |
 | volumeMounts | list | `[]` |  |
 | volumes | list | `[]` |  |

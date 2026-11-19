@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.1](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.5.0...v1.5.1) (2026-11-19)
+
+
+### Bug Fixes
+
+* update alias configuration reference in configmap.yaml ([5d48407](https://github.com/IA-Generative/mozilla-extension-gate/commit/5d48407ec74e6f6081d687b7b7223fdb3ec44322))
+* update GetLatestArtifact to return version alongside artifact data ([f436c48](https://github.com/IA-Generative/mozilla-extension-gate/commit/f436c481c3cf1d516039c84c492d0d2924d482e4))
+
 ## [1.5.0](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.4.1...v1.5.0) (2026-11-19)
 
 
