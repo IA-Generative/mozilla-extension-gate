@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.5.0](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.4.1...v1.5.0) (2026-11-19)
+
+
+### Features
+
+* add extension alias support and implement latest artifact retrieval ([7671595](https://github.com/IA-Generative/mozilla-extension-gate/commit/767159517e8d3d3057a8ab409b2d1294bd9359f0))
+
+
+### Bug Fixes
+
+* add error logging for JSON marshaling in CreateArtifactManifest method ([e8af6a6](https://github.com/IA-Generative/mozilla-extension-gate/commit/e8af6a6f03320db85da50e669031d8c6958fb328))
+* adjust storageClassName in PVC configuration ([a5758dd](https://github.com/IA-Generative/mozilla-extension-gate/commit/a5758dd4de0685c41dffac3f4b8eb065aedc0e94))
+* convert release ID to string using strconv.FormatInt ([b96f0a3](https://github.com/IA-Generative/mozilla-extension-gate/commit/b96f0a337d1b5ccdfb2ee7e55ae9aac0cc24ab90))
+* handle errors when closing response bodies in various providers ([b157c7e](https://github.com/IA-Generative/mozilla-extension-gate/commit/b157c7e8ae8aa22394a4413eee4207bcc79c7c20))
+* handle errors when creating directories and syncing manifest service ([bde0717](https://github.com/IA-Generative/mozilla-extension-gate/commit/bde07174d57a25277139476279a7b5f242f63070))
+* log errors when closing response bodies in ListReleaseAssets and FetchReleaseAsset ([fe414cf](https://github.com/IA-Generative/mozilla-extension-gate/commit/fe414cf6cda2b6af9e11792d99ac33c1d9c77724))
+* remove unnecessary labels from PersistentVolumeClaim metadata ([f11d507](https://github.com/IA-Generative/mozilla-extension-gate/commit/f11d50757c7801f8a115fb051a6073505c891ffc))
+* remove unused regex and string sanitization functions from API package ([e8af6a6](https://github.com/IA-Generative/mozilla-extension-gate/commit/e8af6a6f03320db85da50e669031d8c6958fb328))
+
 ## [1.4.1](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.4.0...v1.4.1) (2026-11-18)
 
 
