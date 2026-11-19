@@ -30,7 +30,7 @@ data:
   FILE_STORAGE_PATH: {{ .Values.config.fileStorage.path | quote }}
 
   # Alias Configuration
-  {{- if .Values.config.alias.extensionAlias }}
+  {{- if .Values.config.extensionAlias }}
   EXTENSION_ALIAS: {{ .Values.config.extensionAlias | quote }}
   {{- end }}
 
