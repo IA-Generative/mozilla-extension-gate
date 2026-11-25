@@ -17,7 +17,7 @@ spec:
     rollingUpdate:
       maxUnavailable: {{ .rollingUpdate.maxUnavailable | default 1 }}
       maxSurge: {{ .rollingUpdate.maxSurge | default 1 }}
-  {{- end -}}
+  {{- end }}
   template:
     metadata:
       annotations:
