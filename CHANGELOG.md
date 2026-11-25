@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.5.1...v1.5.2) (2026-11-25)
+
+
+### Bug Fixes
+
+* filter out draft and prerelease GitHub releases in ListReleases ([1b09181](https://github.com/IA-Generative/mozilla-extension-gate/commit/1b091810eed4e78ffc42fdca0d9384d024df6f81))
+
 ## [1.5.1](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.5.0...v1.5.1) (2026-11-19)
 
 
