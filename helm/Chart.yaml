@@ -2,8 +2,8 @@ apiVersion: v2
 name: mozilla-extension-gate
 description: A Helm chart for mozilla-extension-gate application
 type: application
-version: 0.1.8
-appVersion: "1.5.2"
+version: 0.1.9
+appVersion: "1.5.3"
 keywords:
   - mozilla
   - extension

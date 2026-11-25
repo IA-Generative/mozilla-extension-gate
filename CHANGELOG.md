@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.3](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.5.2...v1.5.3) (2026-11-25)
+
+
+### Bug Fixes
+
+* correct indentation in deployment.yaml for strategy end block ([6878141](https://github.com/IA-Generative/mozilla-extension-gate/commit/6878141210c879e1316ab287f0a01f95eeb4d000))
+* filter out draft and prerelease GitHub releases in ListReleases ([f55b216](https://github.com/IA-Generative/mozilla-extension-gate/commit/f55b2165b9b42db5baa6c914dfcdbf348427aee9))
+
 ## [1.5.2](https://github.com/IA-Generative/mozilla-extension-gate/compare/v1.5.1...v1.5.2) (2026-11-25)
 
 
