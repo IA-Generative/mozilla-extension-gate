@@ -54,7 +54,6 @@ func (p *GithubProvider) ListReleases() ([]lib.Release, error) {
 
 	var releases []GithubRelease
 	err = json.NewDecoder(resp.Body).Decode(&releases)
-	
 	if err != nil {
 		p.logger.Error("Failed to decode GitHub releases", zap.Error(err))
 		return nil, err
@@ -64,12 +63,14 @@ func (p *GithubProvider) ListReleases() ([]lib.Release, error) {
 		p.logger.Error("Failed to close response body", zap.Error(err))
 	}
 
+	var filteredReleases []GithubRelease
 	for _, release := range releases {
 		if release.Draft || release.Prerelease {
 			continue
 		}
+		filteredReleases = append(filteredReleases, release)
 	}
-	return convertGithubReleasesToLibReleases(releases), nil
+	return convertGithubReleasesToLibReleases(filteredReleases), nil
 }
 
 func (p *GithubProvider) ListReleaseAssets(release lib.Release) ([]lib.ReleaseAsset, error) {
@@ -113,7 +114,7 @@ func (p *GithubProvider) ListReleaseAssets(release lib.Release) ([]lib.ReleaseAs
 
 	var assets []GithubReleaseAsset
 	err = json.NewDecoder(resp.Body).Decode(&assets)
-	
+
 	if err != nil {
 		p.logger.Error("Failed to decode GitHub release assets", zap.Error(err))
 		return nil, err
