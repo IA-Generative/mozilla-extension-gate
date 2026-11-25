@@ -64,6 +64,11 @@ func (p *GithubProvider) ListReleases() ([]lib.Release, error) {
 		p.logger.Error("Failed to close response body", zap.Error(err))
 	}
 
+	for _, release := range releases {
+		if release.Draft || release.Prerelease {
+			continue
+		}
+	}
 	return convertGithubReleasesToLibReleases(releases), nil
 }
 
